@@ -5,9 +5,11 @@ import com.github.pagehelper.PageInfo;
 import com.tor.classify.AlgorithmUtil;
 import com.tor.pojo.Feature;
 import com.tor.pojo.Packet;
+import com.tor.result.Const;
 import com.tor.service.FeatureService;
 import com.tor.service.PacketService;
 import com.tor.utils.PropertiesUtil;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.ModelMap;
@@ -19,6 +21,8 @@ import java.util.HashMap;
 import java.util.List;
 
 @Controller
+@Slf4j
+@RequestMapping("/feature")
 public class FeatureController {
 
     AlgorithmUtil algorithmUtil = new AlgorithmUtil();
@@ -28,7 +32,7 @@ public class FeatureController {
     private PacketService packetService;
     private Feature feature = new Feature();
 
-    @RequestMapping(value = "/feature", method = RequestMethod.GET)
+    @RequestMapping(method = RequestMethod.GET)
     public String findAll(ModelMap map, @RequestParam(required = false, defaultValue = "1", value = "pn") Integer pn) {
         //写一个函数将fileInforList分成两个List，才能完成分页功能
         List<Packet> TrainFileInforList;
@@ -38,14 +42,11 @@ public class FeatureController {
         map.addAttribute("Feature", TrainFileInforList);
         PageInfo<Packet> pageList = new PageInfo<>(TrainFileInforList);
         map.addAttribute("page", pageList);
-        return "Feature";
+        return Const.FEATURE_PAGE;
     }
 
-    @RequestMapping(value = "/feature/getFeature")
+    @RequestMapping(value = "/getFeature")
     public String feature(@RequestParam("trainFile") String trainFileName, @RequestParam("featureSelectAlgorithm") String algorithm, ModelMap map) throws Exception {
-        System.out.println(trainFileName);
-        System.out.println(algorithm);
-
         feature.setFeatureAlgorithm(algorithm);
         feature.setTrainName(trainFileName);
         Packet packet = packetService.findExactPacketByName(trainFileName);
@@ -102,6 +103,6 @@ public class FeatureController {
         }
         map.addAttribute("featureResultCh", stringBuilder.toString());
 
-        return "ShowFeature";
+        return Const.SHOW_FEATURE_PAGE;
     }
 }

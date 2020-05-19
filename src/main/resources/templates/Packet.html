@@ -48,7 +48,22 @@
                 </form>
                 <div id="2" style="margin:10px">
                     <div align="center">
-                        <a class="btn btn-primary" href="/packet" role="button" style="margin-right:10px;">新增数据包信息</a>
+                        <!--                        <a class="btn btn-primary" href="/packet" role="button" style="margin-right:10px;">新增数据包信息</a>-->
+                        <form action="/packet/addPacket" enctype="multipart/form-data" method="post">
+                            <p>
+                                <label class="title">
+                                    请选择数据包
+                                    <input name="file" type="file" value="pcap"/>
+                            <p><label class="title">选择数据包类型</label>
+                                <select id="selectPacket" name="packet">
+                                    <option value="local">local</option>
+                                    <option selected value="server">server</option>
+                                </select>
+                            </p>
+                            <input class="button" type="submit" value="新增数据包"/>
+                            </label>
+                            </p>
+                        </form>
                     </div>
                 </div>
                 <table class="table table-striped table-hover table-bordered"
@@ -63,7 +78,6 @@
                         <th>数据包类型</th>
                         <th>数据包对应csv文件路径</th>
                         <th>删除</th>
-                        <th>更新</th>
                     </tr>
                     </thead>
                     <tbody>
@@ -74,7 +88,6 @@
                         <td style="width:120px;" th:text="${packet.csvPath}"></td>
                         <td><a class="btn btn-danger"
                                th:href="@{/packet/delete/{filename}(filename=${packet.packetName})}">删除</a></td>
-                        <!--            <td><a class="btn btn-danger" th:href="@{/packet/update/{user}(user=${home.filename})}">更新</a></td>-->
                     </tr>
                     </tbody>
                 </table>

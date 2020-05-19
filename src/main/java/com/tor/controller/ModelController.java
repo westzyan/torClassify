@@ -5,6 +5,7 @@ import com.github.pagehelper.PageInfo;
 import com.tor.pojo.Model;
 import com.tor.result.Const;
 import com.tor.service.ModelService;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.ModelMap;
@@ -13,6 +14,7 @@ import org.springframework.web.bind.annotation.*;
 import java.util.List;
 
 @Controller
+@Slf4j
 @RequestMapping(value = "/model")
 public class ModelController {
 

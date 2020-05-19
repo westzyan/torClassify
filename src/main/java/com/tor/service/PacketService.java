@@ -20,6 +20,10 @@ public class PacketService {
         return packetDao.findAllPacket();
     }
 
+    public List<Packet> findAllPacketDesc() {
+        return packetDao.findAllPacketDesc();
+    }
+
     public int deletePacket(Integer id) {
         return packetDao.deletePacket(id);
     }

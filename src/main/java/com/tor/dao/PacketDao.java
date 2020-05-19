@@ -14,11 +14,14 @@ import java.util.List;
 @Component("PacketDao")
 public interface PacketDao {
 
-    @Insert("insert into packet (packetName,packetPath,type) values(#{packetName},#{packetPath},#{type})")
+    @Insert("insert into packet (packetName,packetPath,type,csvPath) values(#{packetName},#{packetPath},#{type},#{csvPath})")
     int insertPacket(Packet packet);
 
     @Select("select * from packet")
     List<Packet> findAllPacket();
+
+    @Select("select * from packet ORDER BY id DESC")
+    List<Packet> findAllPacketDesc();
 
     @Delete("delete from packet where id=#{id}")
     int deletePacket(Integer id);
