@@ -1,0 +1,153 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.w3.org/1999/xhtml">
+<head>
+    <meta charset="UTF-8">
+    <title>测试结果的图形化展示</title>
+    <link rel="stylesheet" th:href="@{/css/default.css}"/>
+    <script th:src="@{https://cdn.bootcss.com/jquery/3.2.1/jquery.min.js}" type="text/javascript"></script>
+    <link rel="stylesheet" th:href="@{https://cdn.bootcss.com/bootstrap/3.3.7/css/bootstrap.min.css}"/>
+
+
+    <meta content="width=device-width, initial-scale=1, shrink-to-fit=no" name="viewport">
+    <meta content="" name="description">
+    <meta content="" name="author">
+    <link href="https://fonts.googleapis.com/css?family=Roboto:100,300,400,500,700" rel="stylesheet">
+
+    <!-- Bootstrap core CSS -->
+    <link rel="stylesheet" th:href="@{/vendor/bootstrap/css/bootstrap.min.css}" type="text/css">
+    <!-- Additional CSS Files -->
+    <link rel="stylesheet" th:href="@{/assets/css/fontawesome.css}" type="text/css">
+    <link rel="stylesheet" th:href="@{/assets/css/templatemo-style.css}" type="text/css">
+    <link rel="stylesheet" th:href="@{/assets/css/owl.css}" type="text/css">
+
+    <!-- Scripts -->
+    <!-- Bootstrap core JavaScript -->
+    <script th：src="@{/vendor/jquery/jquery.min.js}" type="text/javascript"></script>
+    <script th：src="@{/vendor/bootstrap/js/bootstrap.bundle.min.js}" type="text/javascript"></script>
+    <script th：src="@{/assets/js/browser.min.js}" type="text/javascript"></script>
+    <script th：src="@{/assets/js/breakpoints.min.js}" type="text/javascript"></script>
+    <script th：src="@{/assets/js/transition.js}" type="text/javascript"></script>
+    <script th：src="@{/assets/js/owl-carousel.js}" type="text/javascript"></script>
+    <script th：src="@{/assets/js/custom.js}" type="text/javascript"></script>
+    <script src="assets/js/echarts.js"></script>
+</head>
+<body class="is-preload">
+<div id="wrapper">
+    <!-- Main -->
+    <div id="main">
+        <div class="inner">
+            <!-- Header -->
+            <header id="header">
+                <div class="logo">
+                    <a href="/test/picture">测试结果图形化展示</a>
+                </div>
+            </header>
+            <input id="rightnum" th:value="${infor.get(0)}" type="hidden">
+            <input id="rightrate" th:value="${infor.get(1)}" type="hidden">
+            <input id="wrongnum" th:value="${infor.get(2)}" type="hidden">
+            <input id="wrongrate" th:value="${infor.get(3)}" type="hidden">
+            <!-- 为 ECharts 准备一个具备大小（宽高）的 DOM -->
+            <div id="chart" style="width: 600px;height:300px; border: 2px solid #c5464a;"></div>
+            <script type="text/javascript">// 基于准备好的dom，初始化echarts实例
+            var myChart = echarts.init(document.getElementById('chart'));
+            var rightnum = document.getElementById('rightnum').value;
+            var rightrate = document.getElementById('rightrate').value;
+            var wrongnum = document.getElementById('wrongnum').value;
+            var wrongrate = document.getElementById('wrongrate').value;
+            var totalnum = rightnum + wrongnum;
+            // 指定图表的配置项和数据
+            var option = {
+                title: {
+                    text: '多项测试结果展示柱形图：'
+                },
+                tooltip: {},
+                legend: {
+                    data: ['占比']
+                },
+                xAxis: {
+                    data: ["Kappa statistic", "Mean absolute error ", "Root mean squared error "]
+                },
+                yAxis: {},
+                series: [{
+                    name: '占比',
+                    type: 'bar',
+                    data: [0.7331, 0.2086, 0.3303]
+                }]
+            };
+
+            // 使用刚指定的配置项和数据显示图表。
+            myChart.setOption(option);
+            </script>
+            <div id="chart1" style="width: 600px;height:300px; border: 2px solid #c5464a;"></div>
+            <script type="text/javascript">// 基于准备好的dom，初始化echarts实例
+            var myChart = echarts.init(document.getElementById('chart1'));
+            // 指定图表的配置项和数据
+            var option = {
+                title: {
+                    text: '多项测试结果展示扇形图：'
+                },
+                tooltip: {},
+                color: ['#31b0d5', 'pink'],
+                legend: {
+                    x: 'left',
+                    y: 'bottom',
+                    data: ['Correctly Classified Instances ', 'Incorrectly Classified Instances ']
+                },
+
+                series: [
+                    {
+                        name: '结果展示',
+                        type: 'pie',
+                        radius: '55%',
+                        itemStyle: {
+                            normal: {
+                                label: {
+                                    show: true,
+                                    formatter: "{b}:  ({d}%)",//显示标签
+                                },
+                                labelLine: {
+                                    show: true,//显示标签线
+                                },
+                                borderWidth: 2, //设置border的宽度有多大
+                                borderColor: '#fff',
+                            },
+                        },
+                        data: [
+                            {value: rightnum, name: 'Correctly Classified Instances'},
+                            {value: wrongnum, name: 'Incorrectly Classified Instances'}
+                        ]
+                    }
+                ]
+            };
+
+            // 使用刚指定的配置项和数据显示图表。
+            myChart.setOption(option);
+            </script>
+            <div align="center" class="form-group">
+                <input class="button" onclick="history.back() "
+                       style="width: 200px;height: 50px;background:#c5464a;color:#fff;" type="submit" value="返回"/>
+            </div>
+        </div>
+    </div>
+    <!-- Sidebar -->
+    <div id="sidebar">
+        <div class="inner">
+
+            <!-- Menu -->
+            <nav id="menu">
+                <ul>
+                    <li><a href="index">抓包</a></li>
+                    <li><a href="home">数据包管理</a></li>
+                    <li><a href="model">数据流量分类模型</a></li>
+                    <li><a href="data">模型信息管理</a></li>
+                    <li><a href="test">测试模型</a></li>
+                    <li><a href="ass">评估模型</a></li>
+                </ul>
+            </nav>
+
+        </div>
+    </div>
+</div>
+</body>
+</html>
+
