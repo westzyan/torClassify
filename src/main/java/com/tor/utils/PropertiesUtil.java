@@ -42,4 +42,12 @@ public class PropertiesUtil {
     public static String getFeature() {
         return props.getProperty("feature_path");
     }
+
+    public static String getModel() {
+        return props.getProperty("model");
+    }
+
+    public static String getModelInfo() {
+        return props.getProperty("model_info");
+    }
 }

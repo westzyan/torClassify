@@ -2,12 +2,12 @@ package com.tor.controller;
 
 import com.github.pagehelper.PageHelper;
 import com.github.pagehelper.PageInfo;
-import com.tor.classify.AlgorithmUtil;
 import com.tor.pojo.Feature;
 import com.tor.pojo.Packet;
 import com.tor.result.Const;
 import com.tor.service.FeatureService;
 import com.tor.service.PacketService;
+import com.tor.utils.AlgorithmUtil;
 import com.tor.utils.PropertiesUtil;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -38,9 +38,9 @@ public class FeatureController {
         List<Packet> TrainFileInforList;
 
         PageHelper.startPage(pn, 6);
-        TrainFileInforList = packetService.findPacketByType("local");
-        map.addAttribute("Feature", TrainFileInforList);
-        PageInfo<Packet> pageList = new PageInfo<>(TrainFileInforList);
+        List<Packet> packetList = packetService.findAllPacket();
+        map.addAttribute("Feature", packetList);
+        PageInfo<Packet> pageList = new PageInfo<>(packetList);
         map.addAttribute("page", pageList);
         return Const.FEATURE_PAGE;
     }

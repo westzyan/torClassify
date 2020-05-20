@@ -1,11 +1,14 @@
-package com.tor.classify;
+package com.tor.utils;
 
 import com.csvreader.CsvReader;
+import com.tor.classify.ArffUtil;
 import com.tor.pojo.Model;
+import com.tor.pojo.Train;
 import weka.classifiers.Classifier;
 import weka.classifiers.Evaluation;
 import weka.classifiers.meta.FilteredClassifier;
 import weka.core.Instances;
+import weka.core.SerializationHelper;
 import weka.core.converters.ConverterUtils;
 
 import java.io.*;
@@ -115,44 +118,53 @@ public class AlgorithmUtil {
     /**
      * 将模型信息写入.model文件，并存入新的一个对象model，以便存入数据库。
      * 将训练好的模型保存
+     *
      * @param classifier:分类器
      * @param train：存储着模型信息的对象
      * @throws Exception
      */
-//    public void saveModel(Classifier classifier, Train train) throws Exception {
-//        String model_inforpath = train.getModel_infor();
-//        SerializationHelper.write(model_inforpath, classifier);//保存和加载分类器模型参数
-//        String modelname1 = train.getModelname();
-//        String result1 = train.getResultpath_txt();
-//        String train_filename1 = train.getTrainname();
-//        String feature1  ="C:/Users/96937/IdeaProjects2/model/" + train_filename1 + "Features"+ ".txt";
-//        model.setModel_name(modelname1);
-//        model.setFeature_path(feature1);
-//        model.setModel_path(model_inforpath);
-//        model.setResult_path(result1);
-//    }
+    public void saveModel(Classifier classifier, Train train) throws Exception {
+        String modelInfo = train.getModelPath();
+        SerializationHelper.write(modelInfo, classifier);//保存和加载分类器模型参数
+        String modelName = train.getModelName();
+        String result = train.getModelInfo();
+        String trainFileName = train.getTrainFileName();
+        String feature = PropertiesUtil.getFeature() + trainFileName + "Features" + ".txt";
+        model.setModelName(modelName);
+        model.setFeaturePath(feature);
+        model.setModelPath(trainFileName);
+        model.setModelInfo(result);
+    }
 
 
     /**
-     *将模型的好坏矩阵写入 Infor.txt文件。
+     * 将模型的混淆矩阵写入 Info.txt文件。
+     *
      * @param classifier:分类器
      * @param train：训练集
-     * @param train :存放着模型数据的对象。
+     * @param train          :存放着模型数据的对象。
      * @throws Exception
      */
-//    public void saveModelInfo(Classifier classifier, Instances train1, Train train) throws Exception {
-//        File f = null;
-//        String result1 = train.getResultpath_txt();
-//        f = new File(result1);
-//        FileWriter fw;
-//        try {
-//            fw = new FileWriter(f);
-//            fw.write(crossValidateModel(classifier, train1).toString());//将模型信息写入文件
-//            fw.close();
-//        } catch (IOException e) {
-//            e.printStackTrace();
-//        }
-//    }
+    public void saveModelInfo(Classifier classifier, Instances trainFile, Train train) throws Exception {
+        String modelInfoPath = train.getModelInfo();
+        File modelInfoTxt = new File(modelInfoPath);
+        File fileParent = modelInfoTxt.getParentFile();//返回的是File类型,可以调用exsit()等方法
+        if (!fileParent.exists()) {
+            fileParent.mkdirs();// 能创建多级目录
+        }
+        if (!modelInfoTxt.exists()) {
+            modelInfoTxt.createNewFile();//有路径才能创建文件
+        }
+
+        FileWriter fw;
+        try {
+            fw = new FileWriter(modelInfoTxt);
+            fw.write(crossValidateModel(classifier, trainFile).toString());//将模型信息写入文件
+            fw.close();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+    }
 
 
     /**

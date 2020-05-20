@@ -1,10 +1,13 @@
 package com.tor.service;
 
 
-import com.tor.classify.AlgorithmUtil;
 import com.tor.classify.ArffUtil;
 import com.tor.classify.ClassifyFeatures;
+import com.tor.classify.TrainingData;
 import com.tor.pojo.Feature;
+import com.tor.pojo.Model;
+import com.tor.pojo.Train;
+import com.tor.utils.AlgorithmUtil;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -48,16 +51,16 @@ public class FeatureService {
         }
     }
 
-//    public void training(Train train) throws Exception {
-//        TrainingData traingData = new TrainingData();
-//        //开始机器学习算法：
-//        traingData.show_Model(train);
-//        System.out.println("调用机器学习算法！！");//选择的得到的为 1 or 2;
-//        //训练得到一个模型。model_name model_path result_path feature_path;
-//        Model model_new=traingData.getModel();
-//        modelService.insert_model(model_new);
-//        System.out.println("成功将模型信息插入数据库！！！");
-//    }
+    public void training(Train train) throws Exception {
+        TrainingData traingData = new TrainingData();
+        //开始机器学习算法：
+        traingData.showModel(train);
+        System.out.println("调用机器学习算法！！");//选择的得到的为 1 or 2;
+        //训练得到一个模型。model_name model_path result_path feature_path;
+        Model newModel = traingData.getModel();
+        modelService.insertModel(newModel);
+        System.out.println("成功将模型信息插入数据库！！！");
+    }
 
 
 }

@@ -1,20 +1,17 @@
 <!DOCTYPE html>
 <html lang="en" xmlns:c="http://www.w3.org/1999/XSL/Transform" xmlns:th="http://www.w3.org/1999/xhtml">
 <head>
+    <meta charset="UTF-8">
     <title>数据包列表</title>
-    <meta charset="utf-8">
-    <meta content="width=device-width, initial-scale=1, shrink-to-fit=no" name="viewport">
-    <meta content="" name="description">
-    <meta content="" name="author">
+    <title>Title</title>
+    <link rel="stylesheet" th:href="@{/css/default.css}"/>
     <link href="https://fonts.googleapis.com/css?family=Roboto:100,300,400,500,700" rel="stylesheet">
 
-    <!-- Bootstrap core CSS -->
-    <link href="vendor/bootstrap/css/bootstrap.min.css" rel="stylesheet">
-
-    <!-- Additional CSS Files -->
-    <link href="assets/css/fontawesome.css" rel="stylesheet">
-    <link href="assets/css/templatemo-style.css" rel="stylesheet">
-    <link href="assets/css/owl.css" rel="stylesheet">
+    <meta content="width=device-width, initial-scale=1.0" name="viewport">
+    <link rel="stylesheet" th:href="@{/vendor/bootstrap/css/bootstrap.min.css}" type="text/css"/>
+    <link rel="stylesheet" th:href="@{/assets/css/fontawesome.css}" type="text/css"/>
+    <link rel="stylesheet" th:href="@{/assets/css/templatemo-style.css}" type="text/css"/>
+    <link rel="stylesheet" th:href="@{/assets/css/owl.css}" type="text/css"/>
 
 </head>
 <body class="is-preload">
@@ -64,10 +61,10 @@
                 </div>
             </header>
 
-            <form action="/train/getpackage2" id="editShare" method="post">
+            <form action="/train/process" id="editShare" method="post">
                 <div class="form-inline">
                     <p><label class="title">选择算法:</label>
-                        <select id="selectmethod" name="method2">
+                        <select id="selectmethod" name="algorithm">
                             <option value="C4.5">C4.5</option>
                             <option selected value="RandomForest">RandomForest</option>
                         </select>
@@ -86,17 +83,19 @@
                             <th>数据名字</th>
                             <th>本地地址</th>
                             <th>数据类型</th>
+                            <th>数据包对应csv文件路径</th>
                             <th>选择</th>
                         </tr>
                         </thead>
                         <tbody>
-                        <tr th:each="train :${Train}" th:if="${train.type}eq'service_flow'">
-                            <td style="width:300px;" th:text="${train.filename}"></td>
-                            <td style="width:300px;" th:text="${train.filepath}"></td>
-                            <td style="width:120px;" th:text="${train.type}"></td>
+                        <tr th:each="packet :${data}">
+                            <td style="width:300px;" th:text="${packet.packetName}"></td>
+                            <td style="width:300px;" th:text="${packet.packetPath}"></td>
+                            <td style="width:120px;" th:text="${packet.type}"></td>
+                            <td style="width:120px;" th:text="${packet.csvPath}"></td>
                             <td>
-                                <label class="btn btn-primary" style="width: 85px;height:30px"><input name="selecttrain"
-                                                                                                      th:value="${train.filename}"
+                                <label class="btn btn-primary" style="width: 85px;height:30px"><input name="trainFile"
+                                                                                                      th:value="${packet.packetName}"
                                                                                                       type="radio">选择</label>
                             </td>
                         </tr>

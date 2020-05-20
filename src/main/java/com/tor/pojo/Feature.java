@@ -5,9 +5,9 @@ public class Feature {
     private String featureAlgorithm;
     private String trainName;
     private String trainPath;
-    //arff文件路径
+    //保留提取的特征，删除多于特征的 arff文件路径
     private String arffFilePath;
-    //
+    //提取的特征
     private String featureTxtPath;
 
     public String getFeatureAlgorithm() {

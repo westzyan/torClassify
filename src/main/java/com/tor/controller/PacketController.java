@@ -115,7 +115,7 @@ public class PacketController {
             if (!fullPcapFile.getParentFile().exists()) {
                 fullPcapFile.getParentFile().mkdirs();
             }
-            //TODO pacp转换为csv文件
+            //TODO pacp转换为csv文件 去掉.pcap，以.csv结尾
             if (!fullPcapFile.exists()) {
                 Packet packet = new Packet();
                 packet.setPacketName(filePcapName);
