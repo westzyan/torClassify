@@ -66,22 +66,6 @@ public class TrainController {
         String modelname = trainFileNameReplace.replace(".csv", "") + algorithm + ".model";
         train.setModelName(modelname);
 
-        System.out.println("trainFileName " + trainFileName);
-        System.out.println("algorithm " + algorithm);
-        System.out.println("arffFilePath " + arffFilePath);
-        System.out.println("modelInfo " + modelInfo);
-        System.out.println("modelPath " + modelPath);
-        System.out.println("modelname " + modelname);
-
-
-        /*
-            trainFileName ISCX_tor1.pcap
-            algorithm RandomForest
-            arffFilePath /Users/dramatic/downloads/data/arff/ISCX_tor1.arff
-            modelInfo /Users/dramatic/downloads/data/result/model_info/ISCX_tor1RandomForestInfo.txt
-            modelPath /Users/dramatic/downloads/data/model/ISCX_tor1RandomForest.model
-            modelname ISCX_tor1RandomForest.model
-         */
         featureService.training(train);//进行机器学习，训练集训练出模型。
         String info = algorithmUtil.readModelInfo(train.getModelInfo());
         map.addAttribute("info", info);

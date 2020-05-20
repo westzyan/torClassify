@@ -5,23 +5,16 @@
 
 <head>
     <meta charset="UTF-8">
-    <title>使用已有模型判断</title>
+    <title>使用已有模型进行分类</title>
+    <title>Title</title>
     <link rel="stylesheet" th:href="@{/css/default.css}"/>
-    <script th:src="@{https://cdn.bootcss.com/jquery/3.2.1/jquery.min.js}" type="text/javascript"></script>
-    <link rel="stylesheet" th:href="@{https://cdn.bootcss.com/bootstrap/3.3.7/css/bootstrap.min.css}"/>
-
-    <meta content="width=device-width, initial-scale=1, shrink-to-fit=no" name="viewport">
-    <meta content="" name="description">
-    <meta content="" name="author">
     <link href="https://fonts.googleapis.com/css?family=Roboto:100,300,400,500,700" rel="stylesheet">
 
-    <!-- Bootstrap core CSS -->
-    <link href="vendor/bootstrap/css/bootstrap.min.css" rel="stylesheet">
-
-    <!-- Additional CSS Files -->
-    <link href="assets/css/fontawesome.css" rel="stylesheet">
-    <link href="assets/css/templatemo-style.css" rel="stylesheet">
-    <link href="assets/css/owl.css" rel="stylesheet">
+    <meta content="width=device-width, initial-scale=1.0" name="viewport">
+    <link rel="stylesheet" th:href="@{/vendor/bootstrap/css/bootstrap.min.css}" type="text/css"/>
+    <link rel="stylesheet" th:href="@{/assets/css/fontawesome.css}" type="text/css"/>
+    <link rel="stylesheet" th:href="@{/assets/css/templatemo-style.css}" type="text/css"/>
+    <link rel="stylesheet" th:href="@{/assets/css/owl.css}" type="text/css"/>
 </head>
 <body class="is-preload">
 
@@ -72,12 +65,12 @@
                         </tr>
                         </thead>
                         <tbody>
-                        <tr th:each=" home:${UserList}">
-                            <td style="width:300px;" th:text="${home.filename}"></td>
-                            <td style="width:300px;" th:text="${home.filepath}"></td>
-                            <td style="width:300px;" th:text="${home.type}"></td>
+                        <tr th:each=" packet:${packetList}">
+                            <td style="width:300px;" th:text="${packet.packetName}"></td>
+                            <td style="width:300px;" th:text="${packet.packetPath}"></td>
+                            <td style="width:300px;" th:text="${packet.type}"></td>
                             <td>
-                                <label class="btn btn-primary"><input name="selecttest" th:value="${home.filename}"
+                                <label class="btn btn-primary"><input name="testFile" th:value="${packet.packetName}"
                                                                       type="radio">选择</label>
                             </td>
                         </tr>
@@ -85,19 +78,20 @@
                     </table>
                 </div>
 
-                <a th:href="@{'/test?pn='+${page.firstPage}}">首页</a>
-                <c:if test="${page.hasPreviousPage}"><a th:href="@{'/test?pn='+${page.prePage}}">上一页</a></c:if>
+                <a th:href="@{'/test?pn='+${packetPage.firstPage}}">首页</a>
+                <c:if test="${packetPage.hasPreviousPage}"><a th:href="@{'/test?pn='+${packetPage.prePage}}">上一页</a>
+                </c:if>
 
-                <c:if test="${page.hasNextPage}"><a th:href="@{'/test?pn='+${page.nextPage}}">下一页</a></c:if>
+                <c:if test="${packetPage.hasNextPage}"><a th:href="@{'/test?pn='+${packetPage.nextPage}}">下一页</a></c:if>
 
-                <a th:href="@{'/test?pn='+${page.lastPage}}">最后页</a>
+                <a th:href="@{'/test?pn='+${packetPage.lastPage}}">最后页</a>
                 <p>
                     <span>共</span>
-                    <span th:text="${page.pages}"></span>
+                    <span th:text="${packetPage.pages}"></span>
                     <span>页 --当前页是第</span>
-                    <span id="pagenow" th:text="${page.pageNum}"></span>
+                    <span id="pagenow" th:text="${packetPage.pageNum}"></span>
                     <span>页 -- 共有</span>
-                    <span th:text="${page.total}"></span>
+                    <span th:text="${packetPage.total}"></span>
                     <span>条数据</span>
                     <span>-- 跳转到:
                     <input class="jump" id="jump" type="text" value="1"/>页
@@ -123,32 +117,33 @@
                         </tr>
                         </thead>
                         <tbody>
-                        <tr th:each="model: ${DataBase}">
-                            <td style="width:120px;" th:text="${model.model_name}"></td>
-                            <td style="width:300px;" th:text="${model.model_path}"></td>
-                            <td style="width:300px;" th:text="${model.result_path}"></td>
-                            <td style="width:300px;" th:text="${model.feature_path}"></td>
+                        <tr th:each="model: ${modelList}">
+                            <td style="width:120px;" th:text="${model.modelName}"></td>
+                            <td style="width:300px;" th:text="${model.modelPath}"></td>
+                            <td style="width:300px;" th:text="${model.modelInfo}"></td>
+                            <td style="width:300px;" th:text="${model.featurePath}"></td>
                             <td>
-                                <label class="btn btn-primary"><input name="selectmodel" th:value="${model.model_name}"
+                                <label class="btn btn-primary"><input name="modelName" th:value="${model.modelName}"
                                                                       type="radio">选择</label>
                             </td>
                         </tr>
                         </tbody>
                     </table>
                 </div>
-                <a th:href="@{'/test?pn1='+${page1.firstPage}}">首页</a>
-                <c:if test="${page1.hasPreviousPage}"><a th:href="@{'/test?pn1='+${page1.prePage}}">上一页</a></c:if>
+                <a th:href="@{'/test?pn1='+${modelPage.firstPage}}">首页</a>
+                <c:if test="${modelPage.hasPreviousPage}"><a th:href="@{'/test?pn1='+${modelPage.prePage}}">上一页</a>
+                </c:if>
 
-                <c:if test="${page1.hasNextPage}"><a th:href="@{'/test?pn1='+${page1.nextPage}}">下一页</a></c:if>
+                <c:if test="${modelPage.hasNextPage}"><a th:href="@{'/test?pn1='+${modelPage.nextPage}}">下一页</a></c:if>
 
-                <a th:href="@{'/test?pn1='+${page1.lastPage}}">最后页</a>
+                <a th:href="@{'/test?pn1='+${modelPage.lastPage}}">最后页</a>
                 <p>
                     <span>共</span>
-                    <span th:text="${page1.pages}"></span>
+                    <span th:text="${modelPage.pages}"></span>
                     <span>页 --当前页是第</span>
-                    <span id="page1now" th:text="${page1.pageNum}"></span>
+                    <span id="page1now" th:text="${modelPage.pageNum}"></span>
                     <span>页 -- 共有</span>
-                    <span th:text="${page1.total}"></span>
+                    <span th:text="${modelPage.total}"></span>
                     <span>条数据</span>
                     <span>-- 跳转到:
                     <input class="jump" id="jump1" type="text" value="1"/>页
@@ -176,12 +171,12 @@
             <!-- Menu -->
             <nav id="menu">
                 <ul>
-                    <li><a href="index">抓包/index</a></li>
-                    <li><a href="home">数据包管理/home</a></li>
-                    <li><a href="feature">提取特征/feature</a></li>
-                    <li><a href="train">数据流量训练模型/train</a></li>
-                    <li><a href="model">模型信息管理/model</a></li>
-                    <li><a href="test">测试模型/test</a></li>
+                    <li><a href="/index">抓包/index</a></li>
+                    <li><a href="/home">数据包管理/home</a></li>
+                    <li><a href="/feature">提取特征/feature</a></li>
+                    <li><a href="/train">数据流量训练模型/train</a></li>
+                    <li><a href="/model">模型信息管理/model</a></li>
+                    <li><a href="/test">测试模型/test</a></li>
                 </ul>
             </nav>
 

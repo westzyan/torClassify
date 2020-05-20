@@ -8,10 +8,12 @@ import com.tor.pojo.Feature;
 import com.tor.pojo.Model;
 import com.tor.pojo.Train;
 import com.tor.utils.AlgorithmUtil;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 @Service
+@Slf4j
 public class FeatureService {
     ClassifyFeatures classifyFeatures = new ClassifyFeatures();
     AlgorithmUtil algorithmUtil = new AlgorithmUtil();
@@ -45,7 +47,7 @@ public class FeatureService {
             algorithmUtil.saveFeatures(selectFeatures, featureTxtPath);
             //对csv训练集保留选择的特征，删除多余的特征，并存储为.arff文件。一个训练集对应一个自己的文件名+Feature.arff文件。
             arffUtil.delete(trainFilePath, selectFeatures, trainDelete);
-            System.out.println("特征提取成功结束！");
+            log.info("FeatureService 特征提取成功结束");
         } catch (Exception e) {
             e.printStackTrace();
         }
@@ -53,13 +55,13 @@ public class FeatureService {
 
     public void training(Train train) throws Exception {
         TrainingData traingData = new TrainingData();
-        //开始机器学习算法：
+        //开始机器学习算法
         traingData.showModel(train);
-        System.out.println("调用机器学习算法！！");//选择的得到的为 1 or 2;
-        //训练得到一个模型。model_name model_path result_path feature_path;
+        log.info("FeatureService 调用机器学习算法");
+        //训练得到一个模型
         Model newModel = traingData.getModel();
         modelService.insertModel(newModel);
-        System.out.println("成功将模型信息插入数据库！！！");
+        log.info("FeatureService 成功将模型信息插入数据库");
     }
 
 

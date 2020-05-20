@@ -4,6 +4,7 @@ import com.csvreader.CsvReader;
 import com.tor.classify.ArffUtil;
 import com.tor.pojo.Model;
 import com.tor.pojo.Train;
+import lombok.extern.slf4j.Slf4j;
 import weka.classifiers.Classifier;
 import weka.classifiers.Evaluation;
 import weka.classifiers.meta.FilteredClassifier;
@@ -15,6 +16,7 @@ import java.io.*;
 import java.util.ArrayList;
 import java.util.Random;
 
+@Slf4j
 public class AlgorithmUtil {
     ArffUtil arffUtil = new ArffUtil();
     private Model model = new Model();
@@ -111,7 +113,6 @@ public class AlgorithmUtil {
         info = info.replace(',', ' ').substring(1, info.length() - 2);
         bufferedReader.close();
         fileReader.close();
-//		System.out.println(info);
         return info;
     }
 
@@ -124,16 +125,16 @@ public class AlgorithmUtil {
      * @throws Exception
      */
     public void saveModel(Classifier classifier, Train train) throws Exception {
-        String modelInfo = train.getModelPath();
-        SerializationHelper.write(modelInfo, classifier);//保存和加载分类器模型参数
         String modelName = train.getModelName();
-        String result = train.getModelInfo();
+        SerializationHelper.write(modelName, classifier);//保存和加载分类器模型参数
+        String modelPath = train.getModelPath();
+        String modelInfo = train.getModelInfo();
         String trainFileName = train.getTrainFileName();
-        String feature = PropertiesUtil.getFeature() + trainFileName + "Features" + ".txt";
+        String featurePath = PropertiesUtil.getFeature() + trainFileName.replace(".pcap", "") + "Features" + ".txt";
         model.setModelName(modelName);
-        model.setFeaturePath(feature);
-        model.setModelPath(trainFileName);
-        model.setModelInfo(result);
+        model.setFeaturePath(featurePath);
+        model.setModelPath(modelPath);
+        model.setModelInfo(modelInfo);
     }
 
 
@@ -190,46 +191,44 @@ public class AlgorithmUtil {
     /**
      * 使用保存的模型对测试集进行分类
      *
-     * @param testPath：测试集路径
+     * @param testFilePath：测试集路径
      * @param featurePath：分类器对应的特征文件路径
      * @param modelPath:分类器路径
      * @return
      * @throws Exception
      */
-    public ArrayList<String> useModelclassify(String testname, String testPath, String modelPath, String featurePath) throws Exception {
+    public ArrayList<String> useModelclassify(String testFileName, String testFilePath, String modelPath, String featurePath) throws Exception {
         System.out.println(featurePath);
         String selectFeatures = readFeature(featurePath);//选中的模型中的feature信息。
         ArrayList<String> result = new ArrayList<String>();
-        File file = new File(testPath);
         //转换之后的arff文件路径和名字
-        String Featurepath_arff = "C:/Users/96937/IdeaProjects2/test/" + testname + "Feature" + ".arff";
+        String arffFilePath = PropertiesUtil.getArff() + testFileName + ".arff";
         //根据选中的模型中的特征，删除测试集中的多余特征，并将其保存在Featurepath_arff文件中。
-        arffUtil.delete(testPath, selectFeatures, Featurepath_arff);
+        arffUtil.delete(testFilePath, selectFeatures, arffFilePath);
         //根据保存的Feature.arff文件和模型的地址文件进行计算。
-        result = doClassify(Featurepath_arff, modelPath);
+        result = doClassify(arffFilePath, modelPath);
         return result;
     }
 
     /**
      * 使用保存的模型对测试集进行分类。
      *
-     * @param testfeaturePath_arff；测试文件路径
+     * @param arffFilePath；测试文件路径
      * @param modelPath：分类器路径
      * @return
      * @throws Exception
      */
-    private ArrayList<String> doClassify(String testfeaturePath_arff, String modelPath) throws Exception {
+    private ArrayList<String> doClassify(String arffFilePath, String modelPath) throws Exception {
         ConverterUtils.DataSource sourceTest = null;
-        sourceTest = new ConverterUtils.DataSource(testfeaturePath_arff);
+        sourceTest = new ConverterUtils.DataSource(arffFilePath);
         Instances test = sourceTest.getDataSet();
-        if (test.classIndex() == -1)
-            // 设置关系为最后一列数据
+        if (test.classIndex() == -1) {
             test.setClassIndex(test.numAttributes() - 1);
+        }
         ArrayList<String> result = new ArrayList<String>();
         //加载模型
         FilteredClassifier fc = (FilteredClassifier) weka.core.SerializationHelper.read(modelPath);
-        System.out.println("加载的模型为：");
-        System.out.println(fc);
+        log.info("加载的模型为：" + fc);
         int sum = test.numInstances();
         // 输出预测结果
 //		System.out.println(sum);
