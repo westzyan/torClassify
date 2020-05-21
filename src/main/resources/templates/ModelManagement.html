@@ -46,7 +46,16 @@
                 </form>
                 <div id="2" style="margin:10px">
                     <div align="center">
-                        <a class="btn btn-primary" href="/model/addModel" role="button" style="margin-right:10px;">新增模型信息</a>
+                        <!--                        <a class="btn btn-primary" href="/packet" role="button" style="margin-right:10px;">新增数据包信息</a>-->
+                        <form action="/packet/addPacket" enctype="multipart/form-data" method="post">
+                            <p>
+                                <label class="title">
+                                    请选择模型
+                                    <input name="file" type="file" value="model"/>
+                                    <input class="button" type="submit" value="新增模型"/>
+                                </label>
+                            </p>
+                        </form>
                     </div>
                 </div>
                 <table class="table table-striped table-hover table-bordered"

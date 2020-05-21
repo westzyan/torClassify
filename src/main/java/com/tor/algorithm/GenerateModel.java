@@ -1,4 +1,4 @@
-package com.tor.classify;
+package com.tor.algorithm;
 
 
 import com.tor.pojo.Model;
@@ -10,7 +10,7 @@ import weka.classifiers.trees.RandomForest;
 import weka.core.Instances;
 import weka.core.converters.ConverterUtils;
 
-public class TrainingData {
+public class GenerateModel {
     Model model = new Model();
     AlgorithmUtil algorithmUtil = new AlgorithmUtil();
 

@@ -1,13 +1,13 @@
 package com.tor.service;
 
 
-import com.tor.classify.ArffUtil;
-import com.tor.classify.ClassifyFeatures;
-import com.tor.classify.TrainingData;
+import com.tor.algorithm.GenerateFeatures;
+import com.tor.algorithm.GenerateModel;
 import com.tor.pojo.Feature;
 import com.tor.pojo.Model;
 import com.tor.pojo.Train;
 import com.tor.utils.AlgorithmUtil;
+import com.tor.utils.ArffUtil;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -15,7 +15,7 @@ import org.springframework.stereotype.Service;
 @Service
 @Slf4j
 public class FeatureService {
-    ClassifyFeatures classifyFeatures = new ClassifyFeatures();
+    GenerateFeatures generateFeatures = new GenerateFeatures();
     AlgorithmUtil algorithmUtil = new AlgorithmUtil();
     ArffUtil arffUtil = new ArffUtil();
     @Autowired
@@ -42,7 +42,7 @@ public class FeatureService {
         String selectFeatures;
         try {
             //下面是调用算法得到一个训练集的剩下的特征。 字符串。
-            selectFeatures = classifyFeatures.getClassifyFeature(trainFilePath, featureSelectAlgorithm);
+            selectFeatures = generateFeatures.getClassifyFeature(trainFilePath, featureSelectAlgorithm);
             //将选择的特征存入文本文件.txt：一个训练集对应一个自己的文件名+Feature.txt文件。存在quic/model中。
             algorithmUtil.saveFeatures(selectFeatures, featureTxtPath);
             //对csv训练集保留选择的特征，删除多余的特征，并存储为.arff文件。一个训练集对应一个自己的文件名+Feature.arff文件。
@@ -54,7 +54,7 @@ public class FeatureService {
     }
 
     public void training(Train train) throws Exception {
-        TrainingData traingData = new TrainingData();
+        GenerateModel traingData = new GenerateModel();
         //开始机器学习算法
         traingData.showModel(train);
         log.info("FeatureService 调用机器学习算法");

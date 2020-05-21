@@ -44,59 +44,60 @@ public class PacketController {
 
     //根据名字对数据包进行模糊查询
     @RequestMapping(value = "/findPacketByName", method = RequestMethod.POST)
-    public String findPacketByName(@RequestParam("packetName") String packetName, ModelMap map) {
+    public String findPacketByName(@RequestParam("packetName") String packetName, ModelMap modelMap) {
         List<Packet> res = packetService.findPacketByName(packetName);
         if (res == null) {
+            modelMap.addAttribute("result", Result.error(CodeMsg.NULL_DATA));
             return Const.PACKET_PAGE;
         } else {
             List<Packet> packetList = res;
             PageInfo<Packet> pageList = new PageInfo<>(packetList);
-            map.addAttribute("data", packetList);
-            map.addAttribute("page", pageList);
+            modelMap.addAttribute("data", packetList);
+            modelMap.addAttribute("page", pageList);
             return Const.PACKET_PAGE;
         }
     }
 
     //根据类型对数据包进行模糊查询
     @RequestMapping(value = "/findPacketByType", method = RequestMethod.POST)
-    public String findPacketByType(@RequestParam("type") String type, ModelMap map) {
+    public String findPacketByType(@RequestParam("type") String type, ModelMap modelMap) {
         List<Packet> res = packetService.findPacketByType(type);
         if (res == null) {
             return Const.PACKET_PAGE;
         } else {
             List<Packet> packetList = res;
             PageInfo<Packet> pageList = new PageInfo<>(packetList);
-            map.addAttribute("data", packetList);
-            map.addAttribute("page", pageList);
+            modelMap.addAttribute("data", packetList);
+            modelMap.addAttribute("page", pageList);
             return Const.PACKET_PAGE;
         }
     }
 
     //删除文件
     @RequestMapping(value = "/delete/{id}", method = RequestMethod.GET)
-    public String deletePacket(@PathVariable Integer id, ModelMap map) {
+    public String deletePacket(@PathVariable Integer id, ModelMap modelMap) {
         packetService.deletePacket(id);
         List<Packet> resList = packetService.findAllPacket();
         PageInfo<Packet> pageList = new PageInfo<>(resList);
-        map.addAttribute("data", resList);
-        map.addAttribute("page", pageList);
+        modelMap.addAttribute("data", resList);
+        modelMap.addAttribute("page", pageList);
         return Const.PACKET_PAGE;
     }
 
     //分页对数据包进行查询
     @RequestMapping(method = RequestMethod.GET)
-    public String getUserList(ModelMap map, @RequestParam(required = false, defaultValue = "1", value = "pn") Integer pn) {
+    public String getPacketList(ModelMap modelMap, @RequestParam(required = false, defaultValue = "1", value = "pn") Integer pn) {
         PageHelper.startPage(pn, 6);
         List<Packet> packetList = packetService.findAllPacket();
         PageInfo<Packet> pageList = new PageInfo<>(packetList);
-        map.addAttribute("data", packetList);
-        map.addAttribute("page", pageList);
+        modelMap.addAttribute("data", packetList);
+        modelMap.addAttribute("page", pageList);
         return Const.PACKET_PAGE;
     }
 
 
     @RequestMapping(value = "/addPacket")
-    public String classifyPcap(ModelMap modelMap, @RequestParam("file") MultipartFile file, @RequestParam("packet") String type) throws Exception {
+    public String addPacket(ModelMap modelMap, @RequestParam("file") MultipartFile file, @RequestParam("packet") String type) throws Exception {
         try {
             if (file.isEmpty()) {
                 modelMap.addAttribute("result", Result.error(CodeMsg.NULL_DATA));

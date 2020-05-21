@@ -1,5 +1,6 @@
-package com.tor.classify;
+package com.tor.algorithm;
 
+import com.tor.utils.ArffUtil;
 import weka.attributeSelection.*;
 import weka.core.Instances;
 import weka.core.converters.ConverterUtils;
@@ -7,13 +8,8 @@ import weka.core.converters.ConverterUtils;
 import java.io.File;
 import java.util.Arrays;
 
-public class ClassifyFeatures {
+public class GenerateFeatures {
     ArffUtil arffUtil = new ArffUtil();
-
-    public static void main(String[] args) {
-        ClassifyFeatures c = new ClassifyFeatures();
-        System.out.println(c.getClassifyFeature("/Users/dramatic/downloads/data/pcap_csv/ISCX_tor3.pcap.csv", "CfsSubsetEval+BestFirst"));
-    }
 
     /**
      * @param trainFilePath:训练集路径

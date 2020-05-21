@@ -1,7 +1,6 @@
 package com.tor.utils;
 
 import com.csvreader.CsvReader;
-import com.tor.classify.ArffUtil;
 import com.tor.pojo.Model;
 import com.tor.pojo.Train;
 import lombok.extern.slf4j.Slf4j;

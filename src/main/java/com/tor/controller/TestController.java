@@ -5,7 +5,9 @@ import com.github.pagehelper.PageInfo;
 import com.tor.pojo.Flow;
 import com.tor.pojo.Model;
 import com.tor.pojo.Packet;
+import com.tor.result.CodeMsg;
 import com.tor.result.Const;
+import com.tor.result.Result;
 import com.tor.service.ModelService;
 import com.tor.service.PacketService;
 import com.tor.service.TestService;
@@ -54,10 +56,11 @@ public class TestController {
     }
 
     @RequestMapping(value = "/result", method = RequestMethod.GET)
-    public String test(@RequestParam("testFile") String testFileName, @RequestParam("modelName") String modelname, ModelMap map) throws Exception {
+    public String test(@RequestParam("testFile") String testFileName, @RequestParam("modelName") String modelname, ModelMap modelMap) throws Exception {
         packet = packetService.findExactPacketByName(testFileName);
         model = modelService.findExactModelByName(modelname);
         if (model == null || packet == null) {
+            modelMap.addAttribute("result", Result.error(CodeMsg.NULL_DATA));
             return Const.TEST_PAGE;
         } else {
             String testPath = packet.getPacketPath().replace(".pcap", ".csv");//.csv
@@ -66,7 +69,7 @@ public class TestController {
             String featurePath = model.getFeaturePath();//Feature.txt
             //调用测试算法，得到一个表，表示测试结果。
             List<Flow> resultList = testService.getModelClassifyList(testname, testPath, modelPath, featurePath);
-            map.addAttribute("resultList", resultList);
+            modelMap.addAttribute("resultList", resultList);
             return Const.TEST_RESULT_PAGE;
         }
     }
