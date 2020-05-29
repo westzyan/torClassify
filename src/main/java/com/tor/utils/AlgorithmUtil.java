@@ -118,18 +118,19 @@ public class AlgorithmUtil {
     /**
      * 将模型信息写入.model文件，并存入新的一个对象model，以便存入数据库。
      * 将训练好的模型保存
-     *
      * @param classifier:分类器
      * @param train：存储着模型信息的对象
      * @throws Exception
      */
     public void saveModel(Classifier classifier, Train train) throws Exception {
         String modelName = train.getModelName();
-        SerializationHelper.write(modelName, classifier);//保存和加载分类器模型参数
         String modelPath = train.getModelPath();
+        //保存和加载分类器模型参数
+        SerializationHelper.write(modelPath, classifier);
         String modelInfo = train.getModelInfo();
         String trainFileName = train.getTrainFileName();
-        String featurePath = PropertiesUtil.getFeature() + trainFileName.replace(".pcap", "") + "Features" + ".txt";
+        //模型使用的特征文件地址
+        String featurePath = PropertiesUtil.getFeature() + trainFileName.replace(".csv", "") + "Features" + ".txt";
         model.setModelName(modelName);
         model.setFeaturePath(featurePath);
         model.setModelPath(modelPath);
@@ -227,7 +228,7 @@ public class AlgorithmUtil {
         ArrayList<String> result = new ArrayList<String>();
         //加载模型
         FilteredClassifier fc = (FilteredClassifier) weka.core.SerializationHelper.read(modelPath);
-        log.info("加载的模型为：" + fc);
+//        log.info("加载的模型为：" + fc);
         int sum = test.numInstances();
         // 输出预测结果
 //		System.out.println(sum);

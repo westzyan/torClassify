@@ -1,6 +1,6 @@
 package com.tor.service;
 
-import com.tor.dao.PacketDao;
+import com.tor.dao.TrainPacketDao;
 import com.tor.pojo.Packet;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -8,35 +8,35 @@ import org.springframework.stereotype.Service;
 import java.util.List;
 
 @Service
-public class PacketService {
+public class TrainPacketService {
     @Autowired
-    private PacketDao packetDao;
+    private TrainPacketDao trainPacketDao;
 
     public int insertPacket(Packet packet) {
-        return packetDao.insertPacket(packet);
+        return trainPacketDao.insertPacket(packet);
     }
 
     public List<Packet> findAllPacket() {
-        return packetDao.findAllPacket();
+        return trainPacketDao.findAllPacket();
     }
 
     public List<Packet> findAllPacketDesc() {
-        return packetDao.findAllPacketDesc();
+        return trainPacketDao.findAllPacketDesc();
     }
 
     public int deletePacket(Integer id) {
-        return packetDao.deletePacket(id);
+        return trainPacketDao.deletePacket(id);
     }
 
     public List<Packet> findPacketByName(String packetName) {
-        return packetDao.findPacketByName(packetName);
+        return trainPacketDao.findPacketByName(packetName);
     }
 
     public Packet findExactPacketByName(String packetName) {
-        return packetDao.findExactPacketByName(packetName);
+        return trainPacketDao.findExactPacketByName(packetName);
     }
 
     public List<Packet> findPacketByType(String type) {
-        return packetDao.findPacketByType(type);
+        return trainPacketDao.findPacketByType(type);
     }
 }

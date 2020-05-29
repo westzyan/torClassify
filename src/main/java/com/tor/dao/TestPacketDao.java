@@ -11,28 +11,28 @@ import java.util.List;
 
 
 @Mapper
-@Component("PacketDao")
-public interface PacketDao {
+@Component
+public interface TestPacketDao {
 
-    @Insert("insert into packet (packetName,packetPath,type,csvPath) values(#{packetName},#{packetPath},#{type},#{csvPath})")
+    @Insert("insert into testPacket (packetName,packetPath,type,csvPath) values(#{packetName},#{packetPath},#{type},#{csvPath})")
     int insertPacket(Packet packet);
 
-    @Select("select * from packet")
+    @Select("select * from testPacket")
     List<Packet> findAllPacket();
 
-    @Select("select * from packet ORDER BY id DESC")
+    @Select("select * from testPacket ORDER BY id DESC")
     List<Packet> findAllPacketDesc();
 
-    @Delete("delete from packet where id=#{id}")
+    @Delete("delete from testPacket where id=#{id}")
     int deletePacket(Integer id);
 
-    @Select("SELECT * FROM packet WHERE packetName like '%${value}%' OR type like '%${value}%'")
+    @Select("SELECT * FROM testPacket WHERE packetName like '%${value}%' OR type like '%${value}%'")
     List<Packet> findPacketByName(String packetName);
 
-    @Select("SELECT * FROM packet WHERE packetName=#{packetName}")
+    @Select("SELECT * FROM testPacket WHERE packetName=#{packetName}")
     Packet findExactPacketByName(String packetName);
 
-    @Select("SELECT * FROM packet WHERE type=#{type}")
+    @Select("SELECT * FROM testPacket WHERE type=#{type}")
     List<Packet> findPacketByType(String type);
 }
 

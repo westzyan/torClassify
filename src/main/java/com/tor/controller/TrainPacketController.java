@@ -6,7 +6,7 @@ import com.tor.pojo.Packet;
 import com.tor.result.CodeMsg;
 import com.tor.result.Const;
 import com.tor.result.Result;
-import com.tor.service.PacketService;
+import com.tor.service.TrainPacketService;
 import com.tor.utils.PropertiesUtil;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -24,20 +24,21 @@ import java.util.List;
 @Controller
 @Slf4j
 @RequestMapping(value = "/packet")
-public class PacketController {
+public class TrainPacketController {
     @Autowired
-    private PacketService packetService;
+    private TrainPacketService trainPacketService;
 
     @RequestMapping(value = "/findAllPacket", method = RequestMethod.POST)
-    public String findAllPacket(ModelMap map) {
-        List<Packet> res = packetService.findAllPacket();
+    public String findAllPacket(ModelMap modelMap) {
+        List<Packet> res = trainPacketService.findAllPacket();
         if (res == null) {
+            modelMap.addAttribute("result", Result.error(CodeMsg.NULL_DATA));
             return Const.PACKET_PAGE;
         } else {
-            List<Packet> packetList = packetService.findAllPacket();
+            List<Packet> packetList = trainPacketService.findAllPacket();
             PageInfo<Packet> pageList = new PageInfo<>(packetList);
-            map.addAttribute("data", packetList);
-            map.addAttribute("page", pageList);
+            modelMap.addAttribute("data", packetList);
+            modelMap.addAttribute("page", pageList);
             return Const.PACKET_PAGE;
         }
     }
@@ -45,7 +46,7 @@ public class PacketController {
     //根据名字对数据包进行模糊查询
     @RequestMapping(value = "/findPacketByName", method = RequestMethod.POST)
     public String findPacketByName(@RequestParam("packetName") String packetName, ModelMap modelMap) {
-        List<Packet> res = packetService.findPacketByName(packetName);
+        List<Packet> res = trainPacketService.findPacketByName(packetName);
         if (res == null) {
             modelMap.addAttribute("result", Result.error(CodeMsg.NULL_DATA));
             return Const.PACKET_PAGE;
@@ -61,8 +62,9 @@ public class PacketController {
     //根据类型对数据包进行模糊查询
     @RequestMapping(value = "/findPacketByType", method = RequestMethod.POST)
     public String findPacketByType(@RequestParam("type") String type, ModelMap modelMap) {
-        List<Packet> res = packetService.findPacketByType(type);
+        List<Packet> res = trainPacketService.findPacketByType(type);
         if (res == null) {
+            modelMap.addAttribute("result", Result.error(CodeMsg.NULL_DATA));
             return Const.PACKET_PAGE;
         } else {
             List<Packet> packetList = res;
@@ -73,11 +75,12 @@ public class PacketController {
         }
     }
 
+    //todo 删除之后返回展示界面
     //删除文件
     @RequestMapping(value = "/delete/{id}", method = RequestMethod.GET)
     public String deletePacket(@PathVariable Integer id, ModelMap modelMap) {
-        packetService.deletePacket(id);
-        List<Packet> resList = packetService.findAllPacket();
+        trainPacketService.deletePacket(id);
+        List<Packet> resList = trainPacketService.findAllPacket();
         PageInfo<Packet> pageList = new PageInfo<>(resList);
         modelMap.addAttribute("data", resList);
         modelMap.addAttribute("page", pageList);
@@ -87,8 +90,9 @@ public class PacketController {
     //分页对数据包进行查询
     @RequestMapping(method = RequestMethod.GET)
     public String getPacketList(ModelMap modelMap, @RequestParam(required = false, defaultValue = "1", value = "pn") Integer pn) {
+        System.out.println(pn + "==============?");
         PageHelper.startPage(pn, 6);
-        List<Packet> packetList = packetService.findAllPacket();
+        List<Packet> packetList = trainPacketService.findAllPacket();
         PageInfo<Packet> pageList = new PageInfo<>(packetList);
         modelMap.addAttribute("data", packetList);
         modelMap.addAttribute("page", pageList);
@@ -122,8 +126,8 @@ public class PacketController {
                 packet.setPacketName(filePcapName);
                 packet.setPacketPath(fullPcapName);
                 packet.setType(type);
-                packet.setCsvPath(PropertiesUtil.getPcapCsvPath() + filePcapName);
-                packetService.insertPacket(packet);
+                packet.setCsvPath(PropertiesUtil.getPcapCsvPath() + filePcapName.replace(".pcap", ".csv"));
+                trainPacketService.insertPacket(packet);
                 file.transferTo(fullPcapFile);
             } else {
 
@@ -133,7 +137,7 @@ public class PacketController {
             log.error(e.toString());
         }
         //加入数据包之后，显示现有数据包
-        List<Packet> packetList = packetService.findAllPacketDesc();
+        List<Packet> packetList = trainPacketService.findAllPacketDesc();
         PageInfo<Packet> pageList = new PageInfo<>(packetList);
         modelMap.addAttribute("data", packetList);
         modelMap.addAttribute("page", pageList);

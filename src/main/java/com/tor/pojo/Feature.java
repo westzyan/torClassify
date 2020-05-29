@@ -2,21 +2,12 @@ package com.tor.pojo;
 
 public class Feature {
     //提取特征的算法
-    private String featureAlgorithm;
     private String trainName;
     private String trainPath;
     //保留提取的特征，删除多于特征的 arff文件路径
     private String arffFilePath;
     //提取的特征
     private String featureTxtPath;
-
-    public String getFeatureAlgorithm() {
-        return featureAlgorithm;
-    }
-
-    public void setFeatureAlgorithm(String featureAlgorithm) {
-        this.featureAlgorithm = featureAlgorithm;
-    }
 
     public String getTrainName() {
         return trainName;
@@ -52,11 +43,10 @@ public class Feature {
 
     @Override
     public String toString() {
-        return "Features{" +
-                "feature='" + featureAlgorithm + '\'' +
-                ", trainName='" + trainName + '\'' +
+        return "Feature{" +
+                "trainName='" + trainName + '\'' +
                 ", trainPath='" + trainPath + '\'' +
-                ", featureArffPath='" + arffFilePath + '\'' +
+                ", arffFilePath='" + arffFilePath + '\'' +
                 ", featureTxtPath='" + featureTxtPath + '\'' +
                 '}';
     }

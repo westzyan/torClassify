@@ -80,7 +80,7 @@
                            style="table-layout: fixed; word-break:break-all; word-wrap:break-word;">
                         <thead>
                         <tr>
-                            <th>数据名字</th>
+                            <th>数据包名字</th>
                             <th>本地地址</th>
                             <th>数据类型</th>
                             <th>数据包对应csv文件路径</th>
@@ -95,7 +95,7 @@
                             <td style="width:120px;" th:text="${packet.csvPath}"></td>
                             <td>
                                 <label class="btn btn-primary" style="width: 85px;height:30px"><input name="trainFile"
-                                                                                                      th:value="${packet.packetName}"
+                                                                                                      th:value="${packet.csvPath}"
                                                                                                       type="radio">选择</label>
                             </td>
                         </tr>
@@ -140,7 +140,7 @@
             <nav id="menu">
                 <ul>
                     <li><a href="/index">抓包/index</a></li>
-                    <li><a href="/home">数据包管理/home</a></li>
+                    <li><a href="/packet">数据包管理/home</a></li>
                     <li><a href="/feature">提取特征/feature</a></li>
                     <li><a href="/train">数据流量训练模型/train</a></li>
                     <li><a href="/model">模型信息管理/model</a></li>
@@ -164,6 +164,13 @@
 <script src="assets/js/owl-carousel.js"></script>
 <script src="assets/js/custom.js"></script>
 </body>
-
+<script th:inline="javascript">
+    var result = [[${result}]];
+    if (JSON.stringify(result) !== '{}') {
+        if (result.code !== 1) {
+            layer.msg(result.msg);
+        }
+    }
+</script>
 </html>
 

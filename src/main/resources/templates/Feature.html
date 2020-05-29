@@ -64,12 +64,7 @@
             </header>
             <form action="/feature/getFeature" id="editShare" method="post">
                 <div class="form-inline">
-                    <p><label class="title">特征选择:</label>
-                        <select id="selectfeature" name="featureSelectAlgorithm">
-                            <option selected value="Infogain+Ranker">Infogain+Ranker</option>
-                            <option value="CfsSubsetEval+BestFirst">CfsSubsetEval+BestFirst</option>
-                        </select>
-                    </p>
+                    <p><label class="title">特征选择算法：Infogain+Ranker</label></p>
                 </div>
                 <fieldset>
                     <legend>
@@ -96,7 +91,7 @@
                             <td style="width:120px;" th:text="${feature.csvPath}"></td>
                             <td>
                                 <label class="btn btn-primary" style="width: 85px;height:30px"><input name="trainFile"
-                                                                                                      th:value="${feature.packetName}"
+                                                                                                      th:value="${feature.csvPath}"
                                                                                                       type="radio">选择</label>
                             </td>
                         </tr>

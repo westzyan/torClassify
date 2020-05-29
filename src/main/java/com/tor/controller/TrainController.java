@@ -6,7 +6,7 @@ import com.tor.pojo.Packet;
 import com.tor.pojo.Train;
 import com.tor.result.Const;
 import com.tor.service.FeatureService;
-import com.tor.service.PacketService;
+import com.tor.service.TrainPacketService;
 import com.tor.utils.AlgorithmUtil;
 import com.tor.utils.PropertiesUtil;
 import lombok.extern.slf4j.Slf4j;
@@ -30,7 +30,7 @@ public class TrainController {
     @Autowired
     private FeatureService featureService;
     @Autowired
-    private PacketService packetService;
+    private TrainPacketService trainPacketService;
     private Train train = new Train();
 
     @RequestMapping(method = RequestMethod.GET)
@@ -38,21 +38,23 @@ public class TrainController {
         //写一个函数将fileInforList分成两个List，才能完成分页功能
         List<Packet> PacketList = new LinkedList<>();
         PageHelper.startPage(pn, 6);
-        PacketList = packetService.findAllPacket();
+        PacketList = trainPacketService.findAllPacket();
         map.addAttribute("data", PacketList);
         PageInfo<Packet> page = new PageInfo<>(PacketList);
         map.addAttribute("page", page);
         return Const.TRAIN_PAGE;
     }
 
+    /*
+        trainFileName为得到的数据包对应的csv文件路径
+     */
     @RequestMapping(value = "/process")
     public String feature(@RequestParam("trainFile") String trainFileName, @RequestParam("algorithm") String algorithm, ModelMap map) throws Exception {
-        //使用.csv文件作为训练输入文件
-        String trainFileNameReplace = trainFileName.replace(".pcap", ".csv");
+        //对trainFileName进行处理，得到csv文件的名字
+        String trainFileNameReplace = trainFileName.substring(trainFileName.lastIndexOf("/")).replace("/", "");
         train.setClassifyAlgorithm(algorithm);
-        train.setTrainFileName(trainFileName);
-        Packet packet = packetService.findExactPacketByName(trainFileName);
-        train.setTrainFilePath(packet.getCsvPath());
+        train.setTrainFileName(trainFileNameReplace);
+        train.setTrainFilePath(trainFileName);
 
         String arffFilePath = PropertiesUtil.getArff() + trainFileNameReplace.replace(".csv", "") + ".arff";
         train.setArffFilePath(arffFilePath);

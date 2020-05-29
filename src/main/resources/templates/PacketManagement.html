@@ -81,17 +81,17 @@
                         <td style="width:120px;" th:text="${packet.type}"></td>
                         <td style="width:120px;" th:text="${packet.csvPath}"></td>
                         <td><a class="btn btn-danger"
-                               th:href="@{/packet/delete/{filename}(filename=${packet.packetName})}">删除</a></td>
+                               th:href="@{/packet/delete/{id}(id=${packet.id})}">删除</a></td>
                     </tr>
                     </tbody>
                 </table>
             </div>
-            <a th:href="@{'/home?pn='+${page.firstPage}}">首页</a>
-            <c:if test="${page.hasPreviousPage}"><a th:href="@{'/home?pn='+${page.prePage}}">上一页</a></c:if>
+            <a th:href="@{'/packet?pn='+${page.firstPage}}">首页</a>
+            <c:if test="${page.hasPreviousPage}"><a th:href="@{'/packet?pn='+${page.prePage}}">上一页</a></c:if>
 
-            <c:if test="${page.hasNextPage}"><a th:href="@{'/home?pn='+${page.nextPage}}">下一页</a></c:if>
+            <c:if test="${page.hasNextPage}"><a th:href="@{'/packet?pn='+${page.nextPage}}">下一页</a></c:if>
 
-            <a th:href="@{'/home?pn='+${page.lastPage}}">最后页</a>
+            <a th:href="@{'/packet?pn='+${page.lastPage}}">最后页</a>
             <p>
                 <span>共</span>
                 <span th:text="${page.pages}"></span>
@@ -101,7 +101,7 @@
                 <span th:text="${page.total}"></span>
                 <span>条数据</span>
                 <span>-- 跳转到:
-                <input class="jump" id="jump" type="text" value="1"/>页
+                <input class="jump" id="jump" type="text"/>页
                 <a href="" onclick="getpn(this)">点击跳转</a>
                 </span>
             </p>
@@ -135,4 +135,12 @@
 <script src="assets/js/custom.js"></script>
 
 </body>
+<script th:inline="javascript">
+    var result = [[${result}]];
+    if (JSON.stringify(result) !== '{}') {
+        if (result.code !== 1) {
+            layer.msg(result.msg);
+        }
+    }
+</script>
 </html>

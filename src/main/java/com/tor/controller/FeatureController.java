@@ -6,7 +6,7 @@ import com.tor.pojo.Feature;
 import com.tor.pojo.Packet;
 import com.tor.result.Const;
 import com.tor.service.FeatureService;
-import com.tor.service.PacketService;
+import com.tor.service.TrainPacketService;
 import com.tor.utils.AlgorithmUtil;
 import com.tor.utils.PropertiesUtil;
 import lombok.extern.slf4j.Slf4j;
@@ -29,7 +29,7 @@ public class FeatureController {
     @Autowired
     private FeatureService featureService;
     @Autowired
-    private PacketService packetService;
+    private TrainPacketService trainPacketService;
     private Feature feature = new Feature();
 
     @RequestMapping(method = RequestMethod.GET)
@@ -38,29 +38,31 @@ public class FeatureController {
         List<Packet> TrainFileInforList;
 
         PageHelper.startPage(pn, 6);
-        List<Packet> packetList = packetService.findAllPacket();
+        List<Packet> packetList = trainPacketService.findAllPacket();
         map.addAttribute("Feature", packetList);
         PageInfo<Packet> pageList = new PageInfo<>(packetList);
         map.addAttribute("page", pageList);
         return Const.FEATURE_PAGE;
     }
 
+    /*
+        trainFileName实际为得到的数据包对应的csv文件路径
+     */
     @RequestMapping(value = "/getFeature")
-    public String feature(@RequestParam("trainFile") String trainFileName, @RequestParam("featureSelectAlgorithm") String algorithm, ModelMap map) throws Exception {
-        feature.setFeatureAlgorithm(algorithm);
-        feature.setTrainName(trainFileName);
-        Packet packet = packetService.findExactPacketByName(trainFileName);
-        feature.setTrainPath(packet.getPacketPath());
+    public String feature(@RequestParam("trainFile") String trainFileName, ModelMap map) throws Exception {
+        //对trainFileName进行处理，得到csv文件的名字
+        String trainFileNameReplace = trainFileName.substring(trainFileName.lastIndexOf("/")).replace("/", "");
+        feature.setTrainName(trainFileNameReplace);
+        feature.setTrainPath(trainFileName);
 
-        String arffFilePath = PropertiesUtil.getArff() + trainFileName + ".arff";
+        String arffFilePath = PropertiesUtil.getArff() + trainFileNameReplace.replace(".csv", "") + ".arff";
         feature.setArffFilePath(arffFilePath);
 
-        String featureTxtPath = PropertiesUtil.getFeature() + trainFileName + "Features" + ".txt";
+        String featureTxtPath = PropertiesUtil.getFeature() + trainFileNameReplace.replace(".csv", "") + "Features" + ".txt";
         feature.setFeatureTxtPath(featureTxtPath);
 
         featureService.getFeature(feature);//选择特征算法，得到降维版的csv训练集。
         String featureResult = algorithmUtil.readFeature(featureTxtPath);
-        System.out.println(featureResult);
         map.addAttribute("featureResultEn", featureResult.replace(",label", ""));
 
         String[] feature = featureResult.split(",");

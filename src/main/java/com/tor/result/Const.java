@@ -9,5 +9,6 @@ public class Const {
     public static final String SHOW_RESULT_PAGE = "ShowModelInfo";
     public static final String TEST_PAGE = "TestFunction";
     public static final String TEST_RESULT_PAGE = "ShowTestResult";
+    public static final String TEST_PACKET_PAGE = "TestFunction";
 
 }

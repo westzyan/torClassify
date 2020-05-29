@@ -53,15 +53,31 @@
                         <strong> 请选择测试文件:</strong>
                     </legend>
                 </fieldset>
+                <div id="2" style="margin:10px">
+                    <div align="center">
+                        <!--                        <a class="btn btn-primary" href="/packet" role="button" style="margin-right:10px;">新增数据包信息</a>-->
+                        <form action="/test/addPacket" enctype="multipart/form-data" method="post">
+                            <p>
+                                <label class="title">
+                                    新增测试数据包
+                                    <input name="file" type="file" value="pcap"/>
+                                    <input class="button" type="submit" value="新增数据包"/>
+                                </label>
+                            </p>
+                        </form>
+                    </div>
+                </div>
                 <div class="btn-group" data-toggle="buttons">
                     <table class="table table-striped table-hover table-bordered"
                            style="table-layout: fixed; word-break:break-all; word-wrap:break-word;">
                         <thead>
                         <tr>
-                            <th>数据名称</th>
+                            <th>数据包名字</th>
                             <th>本地地址</th>
                             <th>数据类型</th>
+                            <th>数据包对应csv文件路径</th>
                             <th>选择</th>
+                            <th>删除</th>
                         </tr>
                         </thead>
                         <tbody>
@@ -69,10 +85,13 @@
                             <td style="width:300px;" th:text="${packet.packetName}"></td>
                             <td style="width:300px;" th:text="${packet.packetPath}"></td>
                             <td style="width:300px;" th:text="${packet.type}"></td>
+                            <td style="width:120px;" th:text="${packet.csvPath}"></td>
                             <td>
-                                <label class="btn btn-primary"><input name="testFile" th:value="${packet.packetName}"
+                                <label class="btn btn-primary"><input name="testFile" th:value="${packet.csvPath}"
                                                                       type="radio">选择</label>
                             </td>
+                            <td><a class="btn btn-danger"
+                                   th:href="@{/test/delete/{id}(id=${packet.id})}">删除</a></td>
                         </tr>
                         </tbody>
                     </table>
@@ -110,9 +129,9 @@
                         <thead>
                         <tr>
                             <th>模型名称</th>
-                            <th>模型路径</th>
-                            <th>评价路径</th>
-                            <th>特征路径</th>
+                            <th>存储路径</th>
+                            <th>模型评价</th>
+                            <th>模型使用特征</th>
                             <th>选择</th>
                         </tr>
                         </thead>
@@ -172,7 +191,7 @@
             <nav id="menu">
                 <ul>
                     <li><a href="/index">抓包/index</a></li>
-                    <li><a href="/home">数据包管理/home</a></li>
+                    <li><a href="/packet">数据包管理/home</a></li>
                     <li><a href="/feature">提取特征/feature</a></li>
                     <li><a href="/train">数据流量训练模型/train</a></li>
                     <li><a href="/model">模型信息管理/model</a></li>
@@ -195,5 +214,12 @@
 <script src="assets/js/owl-carousel.js"></script>
 <script src="assets/js/custom.js"></script>
 </body>
-
+<script th:inline="javascript">
+    var result = [[${result}]];
+    if (JSON.stringify(result) !== '{}') {
+        if (result.code !== 1) {
+            layer.msg(result.msg);
+        }
+    }
+</script>
 </html>
