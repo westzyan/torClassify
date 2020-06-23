@@ -118,6 +118,7 @@ public class AlgorithmUtil {
     /**
      * 将模型信息写入.model文件，并存入新的一个对象model，以便存入数据库。
      * 将训练好的模型保存
+     *
      * @param classifier:分类器
      * @param train：存储着模型信息的对象
      * @throws Exception
@@ -191,20 +192,41 @@ public class AlgorithmUtil {
     /**
      * 使用保存的模型对测试集进行分类
      *
-     * @param testFilePath：测试集路径
+     * @param testFilePath：测试集csv文件路径
      * @param featurePath：分类器对应的特征文件路径
      * @param modelPath:分类器路径
      * @return
      * @throws Exception
      */
     public ArrayList<String> useModelclassify(String testFileName, String testFilePath, String modelPath, String featurePath) throws Exception {
-        System.out.println(featurePath);
         String selectFeatures = readFeature(featurePath);//选中的模型中的feature信息。
         ArrayList<String> result = new ArrayList<String>();
         //转换之后的arff文件路径和名字
-        String arffFilePath = PropertiesUtil.getArff() + testFileName + ".arff";
+        String arffFilePath = PropertiesUtil.getArff() + testFileName.replace(".csv", "") + ".arff";
         //根据选中的模型中的特征，删除测试集中的多余特征，并将其保存在Featurepath_arff文件中。
         arffUtil.delete(testFilePath, selectFeatures, arffFilePath);
+        //根据保存的Feature.arff文件和模型的地址文件进行计算。
+        result = doClassify(arffFilePath, modelPath);
+        return result;
+    }
+
+    /**
+     * 进行多分类
+     *
+     * @param testFileName 测试集csv文件路径
+     * @param testFilePath 分类器对应的特征文件路径
+     * @param modelPath    分类器路径
+     * @param featurePath
+     * @return 分类结果
+     * @throws Exception
+     */
+    public ArrayList<String> useModelclassifyMulti(String testFileName, String testFilePath, String modelPath, String featurePath) throws Exception {
+        String selectFeatures = readFeature(featurePath);//选中的模型中的feature信息。
+        ArrayList<String> result = new ArrayList<String>();
+        //转换之后的arff文件路径和名字
+        String arffFilePath = PropertiesUtil.getArff() + testFileName.replace(".csv", "") + "Multi" + ".arff";
+        //根据选中的模型中的特征，删除测试集中的多余特征，并将其保存在Featurepath_arff文件中。
+        arffUtil.deleteMulti(testFilePath, selectFeatures, arffFilePath);
         //根据保存的Feature.arff文件和模型的地址文件进行计算。
         result = doClassify(arffFilePath, modelPath);
         return result;

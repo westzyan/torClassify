@@ -19,16 +19,15 @@ public class ArffUtil {
 
     /**
      * 将CSV文件转换成Arff文件
-     *
      * @param filePath1：CSV文件路径
      * @param filePath2：生成的arff存储路径和文件名
+     *
+     * 特征没有加入源ip 目的ip 源端口 目的端口，和协议。是从下标为5的属性开始的。
+     * 进行二分类的文件头{TOR,NONTOR}
      */
     public void csvToArff(String filePath1, String filePath2) {
-        //filepath1是训练集的地址，filepath2是训练集.arff统一保存的地址
         ArrayList<String> arrayList = new ArrayList<>();
-        //进行二分类的文件头{TOR,NONTOR}
-        //lineSeparator，行分隔符。
-        String head = null;//特征没有加入源ip 目的ip 源端口 目的端口，和协议。是从下标为5的属性开始的。
+        String head;
         head = new StringBuffer().
                 append("@relation feature.arff" + System.lineSeparator())
                 .append("@attribute duration numeric" + System.lineSeparator())
@@ -130,6 +129,120 @@ public class ArffUtil {
         }
         //二分类对应的表头
         stringBuilder.append("@attribute ").append(feature[feature.length - 1]).append(" {TOR,NONTOR}").append(System.lineSeparator()).append(System.lineSeparator());
+        stringBuilder.append("@data").append(System.lineSeparator());
+        try {
+            //ArrayList<String[]> csvList = new ArrayList<String[]>(); // 用来保存数据
+            String csvFilePath = filePath;
+            CsvReader reader = new CsvReader(csvFilePath, ',', Charset.forName("UTF-8")); // 一般用这编码读就可以了
+            reader.readHeaders(); // 跳过表头 如果需要表头的话，不要写这句。
+            while (reader.readRecord()) { // 逐行读入除表头的数据
+                Flow flow = new Flow();
+                flow.setSrcIP(reader.getValues()[0]);
+                flow.setSrcPort(reader.getValues()[1]);
+                flow.setDstIP(reader.getValues()[2]);
+                flow.setDstPort(reader.getValues()[3]);
+                flow.setProtocol(reader.getValues()[4]);
+                flow.setDuration(reader.getValues()[5]);
+                flow.setFlowBytsPsec(reader.getValues()[6]);
+                flow.setFlowPktsPsec(reader.getValues()[7]);
+                flow.setFlowIATMean(reader.getValues()[8]);
+                flow.setFlowIATStd(reader.getValues()[9]);
+                flow.setFlowIATMax(reader.getValues()[10]);
+                flow.setFlowIATMin(reader.getValues()[11]);
+                flow.setFwdIATMean(reader.getValues()[12]);
+                flow.setFwdIATStd(reader.getValues()[13]);
+                flow.setFwdIATMax(reader.getValues()[14]);
+                flow.setFwdIATMin(reader.getValues()[15]);
+                flow.setBwdIATMean(reader.getValues()[16]);
+                flow.setBwdIATStd(reader.getValues()[17]);
+                flow.setBwdIATMax(reader.getValues()[18]);
+                flow.setBwdIATMin(reader.getValues()[19]);
+                flow.setActiveMean(reader.getValues()[20]);
+                flow.setActiveStd(reader.getValues()[21]);
+                flow.setActiveMax(reader.getValues()[22]);
+                flow.setActiveMin(reader.getValues()[23]);
+                flow.setIdleMean(reader.getValues()[24]);
+                flow.setIdleStd(reader.getValues()[25]);
+                flow.setIdleMax(reader.getValues()[26]);
+                flow.setIdleMin(reader.getValues()[27]);
+                flow.setLabel(reader.getValues()[28]);
+                flowList.add(flow);//将训练集的没有表头的读入flowList中。没有删除的所有的特征。
+            }
+            reader.close();
+        } catch (Exception ex) {
+            ex.printStackTrace();
+        }
+//      insert(flowList);
+        StringBuilder stringBuilder1 = new StringBuilder();
+        for (Flow flow : flowList) {
+            //java中map集合用于存储键值对，即key-value,String字符串这里充当key键，Object对象这里是value值。每个键对应一个值。
+            Map<String, Object> fieldMap = new HashMap<String, Object>();
+            //getClass方法可以获取一个对象的类型类，然后在调用该类的方法可以获取该类的相关信息，比如父类的名字，该类的名字。得到类对象
+            Class flowClass = flow.getClass();
+            //得到类中的所有属性集合
+            Field[] fs = flowClass.getDeclaredFields();
+            for (Field field : fs) {
+                String fieldName = field.getName();//获得属性名称
+                String firstLetter = fieldName.substring(0, 1).toUpperCase();//根据属性名称获得对应的属性值。
+                String getMethodName = "get" + firstLetter + fieldName.substring(1);
+                try {
+                    Method getMethod = flowClass.getMethod(getMethodName, new Class[]{});
+                    Object value = getMethod.invoke(flow, new Object[]{}); //这个对象字段get方法的值
+                    fieldMap.put(fieldName, value);//一个fileName 对应一个value。
+                } catch (NoSuchMethodException e) {
+                    e.printStackTrace();
+                } catch (IllegalAccessException e) {
+                    e.printStackTrace();
+                } catch (InvocationTargetException e) {
+                    e.printStackTrace();
+                }
+            }
+            for (int i = 0; i < feature.length; i++) {
+                if (fieldMap.get(feature[i]) != null) {
+                    stringBuilder1.append(fieldMap.get(feature[i])).append(",");
+                }
+            }
+
+            stringBuilder1.deleteCharAt(stringBuilder1.length() - 1);
+            stringBuilder1.append(System.lineSeparator());
+        }
+        try {
+            File mergeFile = new File(newFilePath);
+            //文件不存在时候，主动创建文件。
+            if (!mergeFile.exists()) {
+                mergeFile.createNewFile();
+            }
+            FileWriter fw = new FileWriter(mergeFile, false);
+            BufferedWriter bw = new BufferedWriter(fw);
+            bw.write(stringBuilder.toString());//先写入了头部。
+            bw.write(stringBuilder1.toString());//后写入了下面每一行的内容。写在了每个训练集对应的一个文件名+Feature+".arff"文件中。
+            bw.close();
+            fw.close();
+//          System.out.println("write done!");
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
+
+    /**
+     * 根据模型使用的特征，将测试文件中多余的特征进行删除
+     *
+     * @param filePath：测试文件csv路径
+     * @param features           模型使用的特征
+     * @param newFilePath        新文件的路径
+     */
+    public void deleteMulti(String filePath, String features, String newFilePath) {
+        String[] feature = features.split(",");
+//        System.out.println(feature.length);
+        List<Flow> flowList = new ArrayList<Flow>();
+        StringBuilder stringBuilder = new StringBuilder();
+        stringBuilder.append("@relation ").append(new File(newFilePath).getName()).append(System.lineSeparator()).append(System.lineSeparator());
+        //将剩余的特征属性读入stringBuilder中,作为头.
+        for (int i = 0; i < feature.length - 1; i++) {
+            stringBuilder.append("@attribute ").append(feature[i]).append(" numeric").append(System.lineSeparator());
+        }
+        //多分类对应的表头
+        stringBuilder.append("@attribute ").append(feature[feature.length - 1]).append(" {AUDIO,BROWSING,CHAT,VIDEO}").append(System.lineSeparator()).append(System.lineSeparator());
         stringBuilder.append("@data").append(System.lineSeparator());
         try {
             //ArrayList<String[]> csvList = new ArrayList<String[]>(); // 用来保存数据

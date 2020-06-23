@@ -1,8 +1,11 @@
 <!DOCTYPE html>
-<html lang="ch" xmlns:c="http://www.w3.org/1999/XSL/Transform" xmlns:th="http://www.w3.org/1999/xhtml">
+
+<html lang="en" xmlns:c="http://www.w3.org/1999/XSL/Transform"
+      xmlns:th="http://www.w3.org/1999/xhtml">
+
 <head>
     <meta charset="UTF-8">
-    <title>特征提取</title>
+    <title>直接使用最新模型进行分类</title>
     <title>Title</title>
     <link rel="stylesheet" th:href="@{/css/default.css}"/>
     <link href="https://fonts.googleapis.com/css?family=Roboto:100,300,400,500,700" rel="stylesheet">
@@ -12,17 +15,10 @@
     <link rel="stylesheet" th:href="@{/assets/css/fontawesome.css}" type="text/css"/>
     <link rel="stylesheet" th:href="@{/assets/css/templatemo-style.css}" type="text/css"/>
     <link rel="stylesheet" th:href="@{/assets/css/owl.css}" type="text/css"/>
-
 </head>
-
 <body class="is-preload">
 
 <style>
-    .jump {
-        width: 5%;
-        height: 18px;
-    }
-
     #editShare .button {
         width: 200px;
         height: 50px;
@@ -30,89 +26,91 @@
         color: #fff;
     }
 
-    #editShare input {
-        margin: 0px 10px;
-        border: 2px solid #c5464a;
-        border-radius: 5px;
-        background: transparent;
-        text-align: center;
-        height: 50px;
-        width: calc(100% - 150px);
-        text-align-last: center;
-    }
-
-    #editShare select {
-        width: 450px;
-        margin: 0px 10px;
-        height: 50px;
-        text-align: center;
-        text-align-last: center;
-        border: 2px solid #c5464a;
+    .jump {
+        width: 5%;
+        height: 18px;
     }
 </style>
 
 <!-- Wrapper -->
 <div id="wrapper">
+
     <!-- Main -->
     <div id="main">
+
         <div class="inner">
             <!-- Header -->
             <header id="header">
                 <div class="logo">
-                    <a href="feature">数据流量分析选择</a>
+                    <a href="/test">测试与展示</a>
                 </div>
             </header>
-            <form action="/feature/getFeature" id="editShare" method="post">
-                <div class="form-inline">
-                    <p><label class="title">特征选择算法：Infogain+Ranker</label></p>
-                </div>
+
+
+            <form action="/classify/result">
                 <fieldset>
                     <legend>
-                        <strong style="width: 100px">训练集数据列表</strong>
+                        <strong> 请选择测试文件:</strong>
                     </legend>
                 </fieldset>
+                <div id="2" style="margin:10px">
+                    <div align="center">
+                        <!--                        <a class="btn btn-primary" href="/packet" role="button" style="margin-right:10px;">新增数据包信息</a>-->
+                        <form action="/test/addPacket" enctype="multipart/form-data" method="post">
+                            <p>
+                                <label class="title">
+                                    新增测试数据包
+                                    <input name="file" type="file" value="pcap"/>
+                                    <input class="button" type="submit" value="新增数据包"/>
+                                </label>
+                            </p>
+                        </form>
+                    </div>
+                </div>
                 <div class="btn-group" data-toggle="buttons">
                     <table class="table table-striped table-hover table-bordered"
                            style="table-layout: fixed; word-break:break-all; word-wrap:break-word;">
                         <thead>
                         <tr>
-                            <th>数据包名称</th>
+                            <th>数据包名字</th>
                             <th>本地地址</th>
                             <th>数据类型</th>
                             <th>数据包对应csv文件路径</th>
                             <th>选择</th>
+                            <th>删除</th>
                         </tr>
                         </thead>
                         <tbody>
-                        <tr th:each="feature :${Feature}">
-                            <td style="width:300px;" th:text="${feature.packetName}"></td>
-                            <td style="width:300px;" th:text="${feature.packetPath}"></td>
-                            <td style="width:120px;" th:text="${feature.type}"></td>
-                            <td style="width:120px;" th:text="${feature.csvPath}"></td>
+                        <tr th:each=" packet:${packetList}">
+                            <td style="width:300px;" th:text="${packet.packetName}"></td>
+                            <td style="width:300px;" th:text="${packet.packetPath}"></td>
+                            <td style="width:300px;" th:text="${packet.type}"></td>
+                            <td style="width:120px;" th:text="${packet.csvPath}"></td>
                             <td>
-                                <label class="btn btn-primary" style="width: 85px;height:30px"><input name="trainFile"
-                                                                                                      th:value="${feature.csvPath}"
-                                                                                                      type="radio">选择</label>
+                                <label class="btn btn-primary"><input name="testFile" th:value="${packet.csvPath}"
+                                                                      type="radio">选择</label>
                             </td>
+                            <td><a class="btn btn-danger"
+                                   th:href="@{/test/delete/{id}(id=${packet.id})}">删除</a></td>
                         </tr>
                         </tbody>
                     </table>
                 </div>
 
+                <a th:href="@{'/test?pn='+${packetPage.firstPage}}">首页</a>
+                <c:if test="${packetPage.hasPreviousPage}"><a th:href="@{'/test?pn='+${packetPage.prePage}}">上一页</a>
+                </c:if>
 
-                <a th:href="@{'/feature?pn='+${page.firstPage}}">首页</a>
-                <c:if test="${page.hasPreviousPage}"><a th:href="@{'/feature?pn='+${page.prePage}}">上一页</a></c:if>
+                <c:if test="${packetPage.hasNextPage}"><a th:href="@{'/test?pn='+${packetPage.nextPage}}">下一页</a></c:if>
 
-                <c:if test="${page.hasNextPage}"><a th:href="@{'/feature?pn='+${page.nextPage}}">下一页</a></c:if>
-
-                <a th:href="@{'/feature?pn='+${page.lastPage}}">最后页</a>
+                <a th:href="@{'/test?pn='+${packetPage.lastPage}}">最后页</a>
                 <p>
                     <span>共</span>
-                    <span th:text="${page.pages}"></span>
+                    <span th:text="${packetPage.pages}"></span>
                     <span>页 --当前页是第</span>
-                    <span id="pagenow" th:text="${page.pageNum}"></span>
+                    <span id="pagenow" th:text="${packetPage.pageNum}"></span>
                     <span>页 -- 共有</span>
-                    <span th:text="${page.total}"></span>
+                    <span th:text="${packetPage.total}"></span>
                     <span>条数据</span>
                     <span>-- 跳转到:
                     <input class="jump" id="jump" type="text" value="1"/>页
@@ -123,14 +121,20 @@
                 <p>
                 <div align="center">
                     <input class="button" id="btnPost" style="width: 200px;height: 50px;background:#c5464a;color:#fff;"
-                           type="submit" value="提取特征"/></div>
+                           type="submit" value="分类"/></div>
                 </p>
+
             </form>
+
         </div>
+
     </div>
+
+
     <!-- Sidebar -->
     <div id="sidebar">
         <div class="inner">
+
             <!-- Menu -->
             <nav id="menu">
                 <ul>
@@ -142,17 +146,28 @@
                     <li><a href="/test">测试模型/test</a></li>
                 </ul>
             </nav>
+
         </div>
     </div>
 
 </div>
+<!-- Scripts -->
+<!-- Bootstrap core JavaScript -->
 <script src="vendor/jquery/jquery.min.js"></script>
 <script src="vendor/bootstrap/js/bootstrap.bundle.min.js"></script>
+
 <script src="assets/js/browser.min.js"></script>
 <script src="assets/js/breakpoints.min.js"></script>
 <script src="assets/js/transition.js"></script>
 <script src="assets/js/owl-carousel.js"></script>
 <script src="assets/js/custom.js"></script>
 </body>
+<script th:inline="javascript">
+    var result = [[${result}]];
+    if (JSON.stringify(result) !== '{}') {
+        if (result.code !== 1) {
+            layer.msg(result.msg);
+        }
+    }
+</script>
 </html>
-

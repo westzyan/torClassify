@@ -2,18 +2,15 @@ package com.tor.controller;
 
 import com.github.pagehelper.PageHelper;
 import com.github.pagehelper.PageInfo;
-import com.tor.pojo.Feature;
 import com.tor.pojo.Flow;
 import com.tor.pojo.Model;
 import com.tor.pojo.Packet;
 import com.tor.result.CodeMsg;
 import com.tor.result.Const;
 import com.tor.result.Result;
-import com.tor.service.FeatureService;
 import com.tor.service.ModelService;
 import com.tor.service.TestPacketService;
 import com.tor.service.TestService;
-import com.tor.utils.AlgorithmUtil;
 import com.tor.utils.PropertiesUtil;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -30,61 +27,48 @@ import java.util.LinkedList;
 import java.util.List;
 
 @Controller
-@RequestMapping("/test")
+@RequestMapping("/classify")
 @Slf4j
-public class TestController {
+public class DirectClassifyController {
 
     @Autowired
     TestService testService;
     @Autowired
     private TestPacketService testPacketService;
-    private Packet packet = new Packet();
     @Autowired
     private ModelService modelService;
-    AlgorithmUtil algorithmUtil = new AlgorithmUtil();
-    @Autowired
-    private FeatureService featureService;
     private Model model = new Model();
-    private Feature feature = new Feature();
 
     @RequestMapping(method = RequestMethod.GET)
     public String findAll(ModelMap map, @RequestParam(required = false, defaultValue = "1", value = "pn") Integer pn, @RequestParam(required = false, defaultValue = "1", value = "pn1") Integer pn1) {
-        List<Model> modelList = new LinkedList<>();
         List<Packet> packetList = new LinkedList<>();
-
-        PageHelper.startPage(pn1, 6);
-        modelList = modelService.findAllModel();
-        map.addAttribute("modelList", modelList);
-        PageInfo<Model> modelPage = new PageInfo<>(modelList);
-        map.addAttribute("modelPage", modelPage);
-
         PageHelper.startPage(pn, 6);
         packetList = testPacketService.findAllPacket();
         map.addAttribute("packetList", packetList);
         PageInfo<Packet> packetPage = new PageInfo<>(packetList);
         map.addAttribute("packetPage", packetPage);
-        return Const.TEST_PAGE;
+        return Const.CLASSIFY_PAGE;
     }
 
     /**
-     * @param testCsvPath:测试集对应csv文件路径
-     * @param modelname：模型名称
+     * @param testCsvPath
      * @param modelMap
      * @return
      * @throws Exception
      */
     @RequestMapping(value = "/result", method = RequestMethod.GET)
-    public String test(@RequestParam("testFile") String testCsvPath, @RequestParam("modelName") String modelname, ModelMap modelMap) throws Exception {
+    public String test(@RequestParam("testFile") String testCsvPath, ModelMap modelMap) throws Exception {
         if (testCsvPath == null) {
             modelMap.addAttribute("result", Result.error(CodeMsg.NULL_DATA));
-            return Const.TEST_PAGE;
+            return Const.CLASSIFY_PAGE;
         }
-        //对testCsvPath进行处理得到测试文件名称
+        //对testCsvPath进行处理，得到测试文件名字
         String testFileName = testCsvPath.substring(testCsvPath.lastIndexOf("/")).replace("/", "");
-        model = modelService.findExactModelByName(modelname);
+        //选取最新的模型用于分分类
+        model = modelService.findLastModel();
         if (model == null) {
             modelMap.addAttribute("result", Result.error(CodeMsg.NULL_DATA));
-            return Const.TEST_PAGE;
+            return Const.CLASSIFY_PAGE;
         } else {
             String modelPath = model.getModelPath();//.model
             String featurePath = model.getFeaturePath();//Feature.txt
@@ -150,36 +134,5 @@ public class TestController {
         modelMap.addAttribute("data", packetList);
         modelMap.addAttribute("page", pageList);
         return Const.TEST_PAGE;
-    }
-
-    /**
-     * @param testCsvPath
-     * @param modelMap
-     * @return
-     * @throws Exception
-     */
-    @RequestMapping(value = "/multiResult", method = RequestMethod.GET)
-    public String testMulti(@RequestParam("testFile") String testCsvPath, ModelMap modelMap) throws Exception {
-        if (testCsvPath == null) {
-            modelMap.addAttribute("result", Result.error(CodeMsg.NULL_DATA));
-            return Const.CLASSIFY_PAGE;
-        }
-        //对testCsvPath进行处理，得到测试文件名字
-        String testFileName = testCsvPath.substring(testCsvPath.lastIndexOf("/")).replace("/", "");
-        //选取提供的多分类模型
-        model = modelService.findLastModel();
-        if (model == null) {
-            modelMap.addAttribute("result", Result.error(CodeMsg.NULL_DATA));
-            return Const.CLASSIFY_PAGE;
-        } else {
-
-
-            String modelPath = model.getModelPath();//.model
-            String featurePath = model.getFeaturePath();//Feature.txt
-            //调用测试算法，得到一个表，表示测试结果。
-            List<Flow> resultList = testService.getModelClassifyListMulti(testFileName, testCsvPath, modelPath, featurePath);
-            modelMap.addAttribute("resultList", resultList);
-            return Const.TEST_RESULT_PAGE;
-        }
     }
 }

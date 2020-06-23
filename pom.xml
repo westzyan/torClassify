@@ -65,13 +65,13 @@
             <version>1.0.5</version>
         </dependency>
 
-        <!--        <dependency>-->
-        <!--            <groupId>com.test.packet</groupId>-->
-        <!--            <artifactId>jpcap</artifactId>-->
-        <!--            <version>0.0.1-SNAPSHOT</version>-->
-        <!--            <scope>system</scope>-->
-        <!--            <systemPath>${project.basedir}/lib/jpcap.jar</systemPath>-->
-        <!--        </dependency>-->
+        <dependency>
+            <groupId>com.test.packet</groupId>
+            <artifactId>jpcap</artifactId>
+            <version>0.0.1-SNAPSHOT</version>
+            <scope>system</scope>
+            <systemPath>${project.basedir}/lib/jpcap.jar</systemPath>
+        </dependency>
         <!-- 	分页插件依赖	 -->
         <dependency>
             <groupId>com.github.pagehelper</groupId>

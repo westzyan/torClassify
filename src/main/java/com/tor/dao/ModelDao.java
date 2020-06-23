@@ -29,4 +29,7 @@ public interface ModelDao {
 
     @Select("SELECT * FROM model WHERE modelName=#{modelName}")
     Model findExactModelByName(String modelName);
+
+    @Select("select * from model ORDER BY id DESC LIMIT 1")
+    Model findLastModel();
 }

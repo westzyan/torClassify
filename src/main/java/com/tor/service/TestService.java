@@ -48,4 +48,28 @@ public class TestService {
         }
         return display;
     }
+
+
+    public List<Flow> getModelClassifyListMulti(String testname, String testPath, String modelPath, String featurePath) {
+        ArrayList<Flow> display = new ArrayList<Flow>();
+        try {
+            ArrayList<String[]> csvList = new ArrayList<String[]>();
+            String csvFilePath = testPath;
+            CsvReader reader = new CsvReader(csvFilePath, ',', StandardCharsets.UTF_8);
+            reader.readHeaders();//跳过表头。
+            while (reader.readRecord()) {
+                csvList.add(reader.getValues());
+            }
+            reader.close();//csvList中是除去表头的一个测试文件的全部内容。
+            int boundary = csvList.size();
+            ArrayList<String> classifyResult = new ArrayList<String>();
+            classifyResult = algorithmUtil.useModelclassifyMulti(testname, testPath, modelPath, featurePath);
+            display = arffUtil.attach(boundary, display, csvList, classifyResult);
+            log.info("测试成功结束！");
+        } catch (Exception ex) {
+            ex.printStackTrace();
+            System.out.println(ex);
+        }
+        return display;
+    }
 }

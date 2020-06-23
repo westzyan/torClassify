@@ -8,6 +8,7 @@ import com.tor.result.Const;
 import com.tor.result.Result;
 import com.tor.service.TrainPacketService;
 import com.tor.utils.PropertiesUtil;
+import iscx.cs.unb.ca.ifm.ISCXFlowMeter;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
@@ -90,7 +91,6 @@ public class TrainPacketController {
     //分页对数据包进行查询
     @RequestMapping(method = RequestMethod.GET)
     public String getPacketList(ModelMap modelMap, @RequestParam(required = false, defaultValue = "1", value = "pn") Integer pn) {
-        System.out.println(pn + "==============?");
         PageHelper.startPage(pn, 6);
         List<Packet> packetList = trainPacketService.findAllPacket();
         PageInfo<Packet> pageList = new PageInfo<>(packetList);
@@ -122,11 +122,15 @@ public class TrainPacketController {
             }
             //TODO pacp转换为csv文件 去掉.pcap，以.csv结尾
             if (!fullPcapFile.exists()) {
+                String csvPath = PropertiesUtil.getPcapCsvPath() + filePcapName.replace(".pcap", ".csv");
+                System.out.println(1);
+                ISCXFlowMeter.singlePcap(filePcapName, csvPath);
+                System.out.println(2);
                 Packet packet = new Packet();
                 packet.setPacketName(filePcapName);
                 packet.setPacketPath(fullPcapName);
                 packet.setType(type);
-                packet.setCsvPath(PropertiesUtil.getPcapCsvPath() + filePcapName.replace(".pcap", ".csv"));
+                packet.setCsvPath(csvPath);
                 trainPacketService.insertPacket(packet);
                 file.transferTo(fullPcapFile);
             } else {

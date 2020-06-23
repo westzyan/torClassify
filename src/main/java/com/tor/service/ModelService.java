@@ -40,4 +40,8 @@ public class ModelService {
     public Model findExactModelByName(String modelName) {
         return modelDao.findExactModelByName(modelName);
     }
+
+    public Model findLastModel() {
+        return modelDao.findLastModel();
+    }
 }

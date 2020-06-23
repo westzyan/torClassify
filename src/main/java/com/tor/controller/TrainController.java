@@ -45,27 +45,28 @@ public class TrainController {
         return Const.TRAIN_PAGE;
     }
 
-    /*
-        trainFileName为得到的数据包对应的csv文件路径
+    /**
+     * @param traincsvPath:训练文件对应的csv文件路径
+     * @param algorithm：特征提取算法
+     * @param map
+     * @return
+     * @throws Exception
      */
     @RequestMapping(value = "/process")
-    public String feature(@RequestParam("trainFile") String trainFileName, @RequestParam("algorithm") String algorithm, ModelMap map) throws Exception {
-        //对trainFileName进行处理，得到csv文件的名字
-        String trainFileNameReplace = trainFileName.substring(trainFileName.lastIndexOf("/")).replace("/", "");
+    public String feature(@RequestParam("trainFile") String traincsvPath, @RequestParam("algorithm") String algorithm, ModelMap map) throws Exception {
+        //对traincsvPath进行处理，得到csv文件的名字
+        String trainFileName = traincsvPath.substring(traincsvPath.lastIndexOf("/")).replace("/", "");
         train.setClassifyAlgorithm(algorithm);
-        train.setTrainFileName(trainFileNameReplace);
-        train.setTrainFilePath(trainFileName);
+        train.setTrainFileName(trainFileName);
+        train.setTrainFilePath(traincsvPath);
 
-        String arffFilePath = PropertiesUtil.getArff() + trainFileNameReplace.replace(".csv", "") + ".arff";
-        train.setArffFilePath(arffFilePath);
-
-        String modelInfo = PropertiesUtil.getModelInfo() + trainFileNameReplace.replace(".csv", "") + algorithm + "Info" + ".txt";
+        String modelInfo = PropertiesUtil.getModelInfo() + trainFileName.replace(".csv", "") + algorithm + "Info" + ".txt";
         train.setModelInfo(modelInfo);
 
-        String modelPath = PropertiesUtil.getModel() + trainFileNameReplace.replace(".csv", "") + algorithm + ".model";
+        String modelPath = PropertiesUtil.getModel() + trainFileName.replace(".csv", "") + algorithm + ".model";
         train.setModelPath(modelPath);
 
-        String modelname = trainFileNameReplace.replace(".csv", "") + algorithm + ".model";
+        String modelname = trainFileName.replace(".csv", "") + algorithm + ".model";
         train.setModelName(modelname);
 
         featureService.training(train);//进行机器学习，训练集训练出模型。
