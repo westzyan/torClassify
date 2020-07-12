@@ -2,7 +2,7 @@ package com.tor.controller;
 
 import com.github.pagehelper.PageHelper;
 import com.github.pagehelper.PageInfo;
-import com.tor.pojo.Packet;
+import com.tor.domain.Packet;
 import com.tor.result.CodeMsg;
 import com.tor.result.Const;
 import com.tor.result.Result;
@@ -12,7 +12,6 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.ModelMap;
-import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
@@ -77,8 +76,8 @@ public class TestPacketController {
 
     //todo 删除文件之后的页面
     //删除文件
-    @RequestMapping(value = "/delete/{id}", method = RequestMethod.GET)
-    public String deletePacket(@PathVariable Integer id, ModelMap modelMap) {
+    @RequestMapping(value = "/delete", method = RequestMethod.GET)
+    public String deletePacket(@RequestParam(value = "id") Integer id, ModelMap modelMap) {
         testPacketService.deletePacket(id);
         List<Packet> resList = testPacketService.findAllPacket();
         PageInfo<Packet> pageList = new PageInfo<>(resList);

@@ -1,7 +1,7 @@
 package com.tor.service;
 
 import com.csvreader.CsvReader;
-import com.tor.pojo.Flow;
+import com.tor.domain.Flow;
 import com.tor.utils.AlgorithmUtil;
 import com.tor.utils.ArffUtil;
 import lombok.extern.slf4j.Slf4j;
@@ -65,7 +65,7 @@ public class TestService {
             ArrayList<String> classifyResult = new ArrayList<String>();
             classifyResult = algorithmUtil.useModelclassifyMulti(testname, testPath, modelPath, featurePath);
             display = arffUtil.attach(boundary, display, csvList, classifyResult);
-            log.info("测试成功结束！");
+            log.info("分类完成");
         } catch (Exception ex) {
             ex.printStackTrace();
             System.out.println(ex);

@@ -2,10 +2,10 @@ package com.tor.controller;
 
 import com.github.pagehelper.PageHelper;
 import com.github.pagehelper.PageInfo;
-import com.tor.pojo.Feature;
-import com.tor.pojo.Flow;
-import com.tor.pojo.Model;
-import com.tor.pojo.Packet;
+import com.tor.domain.Feature;
+import com.tor.domain.Flow;
+import com.tor.domain.Model;
+import com.tor.domain.Packet;
 import com.tor.result.CodeMsg;
 import com.tor.result.Const;
 import com.tor.result.Result;

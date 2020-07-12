@@ -2,8 +2,8 @@ package com.tor.controller;
 
 import com.github.pagehelper.PageHelper;
 import com.github.pagehelper.PageInfo;
-import com.tor.pojo.Packet;
-import com.tor.pojo.Train;
+import com.tor.domain.Packet;
+import com.tor.domain.Train;
 import com.tor.result.Const;
 import com.tor.service.FeatureService;
 import com.tor.service.TrainPacketService;

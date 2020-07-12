@@ -3,9 +3,9 @@ package com.tor.service;
 
 import com.tor.algorithm.GenerateFeatures;
 import com.tor.algorithm.GenerateModel;
-import com.tor.pojo.Feature;
-import com.tor.pojo.Model;
-import com.tor.pojo.Train;
+import com.tor.domain.Feature;
+import com.tor.domain.Model;
+import com.tor.domain.Train;
 import com.tor.utils.AlgorithmUtil;
 import com.tor.utils.ArffUtil;
 import lombok.extern.slf4j.Slf4j;

@@ -1,7 +1,7 @@
 package com.tor.utils;
 
 import com.csvreader.CsvReader;
-import com.tor.pojo.Flow;
+import com.tor.domain.Flow;
 
 import java.io.BufferedWriter;
 import java.io.File;

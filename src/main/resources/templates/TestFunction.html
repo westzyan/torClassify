@@ -91,7 +91,7 @@
                                                                       type="radio">选择</label>
                             </td>
                             <td><a class="btn btn-danger"
-                                   th:href="@{/test/delete/{id}(id=${packet.id})}">删除</a></td>
+                                   th:href="@{'/testPacket/delete?id='+${packet.id}}">删除</a></td>
                         </tr>
                         </tbody>
                     </table>

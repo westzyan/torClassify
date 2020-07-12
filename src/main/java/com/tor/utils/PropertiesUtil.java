@@ -50,4 +50,40 @@ public class PropertiesUtil {
     public static String getModelInfo() {
         return props.getProperty("model_info");
     }
+
+    public static String getremoteIP() {
+        return props.getProperty("remoteIP");
+    }
+
+    public static String getRemoteRootName() {
+        return props.getProperty("remote_name");
+    }
+
+    public static String getRemoteRootPassword() {
+        return props.getProperty("remote_password");
+    }
+
+    public static String getRemotePcapPath() {
+        return props.getProperty("remote_pcap_path");
+    }
+
+    public static String getRemoteToLocalPath() {
+        return props.getProperty("remote_pcap_to_local_path");
+    }
+
+    public static String getHttpProxy() {
+        return props.getProperty("http_proxy");
+    }
+
+    public static int getHttpProxyPort() {
+        return Integer.parseInt(props.getProperty("http_proxy_port"));
+    }
+
+    public static String getRemoteFilePath() {
+        return props.getProperty("remote_file_path");
+    }
+
+    public static String getLocalFilePath() {
+        return props.getProperty("local_file_path");
+    }
 }

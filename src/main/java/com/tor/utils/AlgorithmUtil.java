@@ -1,8 +1,8 @@
 package com.tor.utils;
 
 import com.csvreader.CsvReader;
-import com.tor.pojo.Model;
-import com.tor.pojo.Train;
+import com.tor.domain.Model;
+import com.tor.domain.Train;
 import lombok.extern.slf4j.Slf4j;
 import weka.classifiers.Classifier;
 import weka.classifiers.Evaluation;

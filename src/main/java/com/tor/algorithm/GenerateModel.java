@@ -1,8 +1,8 @@
 package com.tor.algorithm;
 
 
-import com.tor.pojo.Model;
-import com.tor.pojo.Train;
+import com.tor.domain.Model;
+import com.tor.domain.Train;
 import com.tor.utils.AlgorithmUtil;
 import weka.classifiers.meta.FilteredClassifier;
 import weka.classifiers.trees.J48;

@@ -2,7 +2,7 @@ package com.tor.service;
 
 
 import com.tor.dao.ModelDao;
-import com.tor.pojo.Model;
+import com.tor.domain.Model;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 

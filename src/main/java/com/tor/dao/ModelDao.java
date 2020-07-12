@@ -1,6 +1,6 @@
 package com.tor.dao;
 
-import com.tor.pojo.Model;
+import com.tor.domain.Model;
 import org.apache.ibatis.annotations.*;
 import org.springframework.stereotype.Component;
 

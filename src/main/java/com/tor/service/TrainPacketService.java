@@ -1,7 +1,7 @@
 package com.tor.service;
 
 import com.tor.dao.TrainPacketDao;
-import com.tor.pojo.Packet;
+import com.tor.domain.Packet;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
