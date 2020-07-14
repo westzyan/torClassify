@@ -32,4 +32,7 @@ public interface ModelDao {
 
     @Select("select * from model ORDER BY id DESC LIMIT 1")
     Model findLastModel();
+
+    @Select("select * from model ORDER BY id DESC LIMIT 5")
+    List<Model> showModel();
 }

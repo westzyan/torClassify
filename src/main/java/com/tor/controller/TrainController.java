@@ -56,9 +56,14 @@ public class TrainController {
     public String feature(@RequestParam("trainFile") String traincsvPath, @RequestParam("algorithm") String algorithm, ModelMap map) throws Exception {
         //对traincsvPath进行处理，得到csv文件的名字
         String trainFileName = traincsvPath.substring(traincsvPath.lastIndexOf("/")).replace("/", "");
+
+        System.out.println("===!!=" + traincsvPath);
         train.setClassifyAlgorithm(algorithm);
         train.setTrainFileName(trainFileName);
         train.setTrainFilePath(traincsvPath);
+
+        String arffFilePath = PropertiesUtil.getArff() + trainFileName.replace(".csv", "") + ".arff";
+        train.setArffFilePath(arffFilePath);
 
         String modelInfo = PropertiesUtil.getModelInfo() + trainFileName.replace(".csv", "") + algorithm + "Info" + ".txt";
         train.setModelInfo(modelInfo);

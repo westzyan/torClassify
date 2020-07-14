@@ -27,6 +27,7 @@ public class GenerateModel {
         String arffFilePath = train.getArffFilePath();
         String algorithm = train.getClassifyAlgorithm();
         int flag = 0;
+        System.out.println(arffFilePath + "----------");
         ConverterUtils.DataSource sourceTrain = new ConverterUtils.DataSource(arffFilePath);
         Instances trainFile = sourceTrain.getDataSet();
         if (trainFile.classIndex() == -1) {
@@ -63,7 +64,5 @@ public class GenerateModel {
             algorithmUtil.saveModelInfo(fc, trainFile, train);
             model = algorithmUtil.getModel();
         }
-
     }
-
 }

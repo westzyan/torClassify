@@ -8,7 +8,6 @@ import weka.core.Instances;
 import weka.core.converters.ConverterUtils;
 
 import java.io.File;
-import java.util.Arrays;
 
 public class GenerateFeatures {
     ArffUtil arffUtil = new ArffUtil();
@@ -43,11 +42,12 @@ public class GenerateFeatures {
             attsel.SelectAttributes(train);
             // 特征选择：从0开始计数
             int[] attrIndex = search.search(eval, train);
-            System.out.println(Arrays.toString(attrIndex));
+
             int avg = 0;
             for (int i = 1; i < attrIndex.length; i++) {
                 avg += (attrIndex[i] - attrIndex[i - 1]) / 2;
             }
+
             StringBuilder attrInfoGainInfo = new StringBuilder();
             for (int i = 0; i < attrIndex.length; i++) {
                 //TODO 删除对分类作用较小的特征

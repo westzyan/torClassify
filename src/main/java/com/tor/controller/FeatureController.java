@@ -52,6 +52,7 @@ public class FeatureController {
     public String feature(@RequestParam("trainFile") String trainFileName, ModelMap map) throws Exception {
         //对trainFileName进行处理，得到csv文件的名字
         String trainFileNameReplace = trainFileName.substring(trainFileName.lastIndexOf("/")).replace("/", "");
+
         feature.setTrainName(trainFileNameReplace);
         feature.setTrainPath(trainFileName);
 

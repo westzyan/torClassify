@@ -61,6 +61,4 @@ public class FeatureService {
         modelService.insertModel(newModel);
         log.info("FeatureService 成功将模型信息插入数据库");
     }
-
-
 }

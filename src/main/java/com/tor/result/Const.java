@@ -11,5 +11,6 @@ public class Const {
     public static final String TEST_RESULT_PAGE = "ShowTestResult";
     public static final String TEST_PACKET_PAGE = "TestFunction";
     public static final String CLASSIFY_PAGE = "DirectClassifyFunction";
+    public static final String INIT_PAGE = "DirectClassifyFunction";
 
 }
