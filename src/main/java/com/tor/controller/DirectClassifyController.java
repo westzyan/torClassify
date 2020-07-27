@@ -11,7 +11,7 @@ import com.tor.result.Result;
 import com.tor.service.ModelService;
 import com.tor.service.TestPacketService;
 import com.tor.service.TestService;
-import com.tor.utils.PropertiesUtil;
+import com.tor.util.PropertiesUtil;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;

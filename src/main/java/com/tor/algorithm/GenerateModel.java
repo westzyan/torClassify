@@ -3,7 +3,7 @@ package com.tor.algorithm;
 
 import com.tor.domain.Model;
 import com.tor.domain.Train;
-import com.tor.utils.AlgorithmUtil;
+import com.tor.util.AlgorithmUtil;
 import weka.classifiers.meta.FilteredClassifier;
 import weka.classifiers.trees.J48;
 import weka.classifiers.trees.RandomForest;

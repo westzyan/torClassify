@@ -2,9 +2,9 @@ package com.tor.service;
 
 import com.jcraft.jsch.*;
 import com.tor.domain.Packet;
-import com.tor.utils.LabelUtil;
-import com.tor.utils.MyUserInfo;
-import com.tor.utils.PropertiesUtil;
+import com.tor.util.LabelUtil;
+import com.tor.util.MyUserInfo;
+import com.tor.util.PropertiesUtil;
 import iscx.cs.unb.ca.ifm.ISCXFlowMeter;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -47,6 +47,8 @@ public class GrabPacketsService {
             }
             if (ISCXFlowMeter.singlePcap(PropertiesUtil.getRemoteToLocalPath() + fileName, PropertiesUtil.getPcapCsvPath())) {
                 log.info("grabPackets：数据包转换成功");
+            } else {
+                log.info("grabPackets：数据包转换失败");
             }
             String csvFullPath = PropertiesUtil.getPcapCsvPath() + "ISCX_" + fileName + ".csv";
             LabelUtil.singleCsvLabel(csvFullPath, "train"); //训练集打标签
@@ -77,6 +79,13 @@ public class GrabPacketsService {
         log.info("grabPackets：构造的cmd命令:{}", command);
         LabelUtil.execute(command); //执行命令
         String csvFullPath = PropertiesUtil.getPcapCsvPath() + "ISCX_" + fileName + ".csv";
+        System.out.println(fullFile);
+        System.out.println(PropertiesUtil.getPcapCsvPath());
+        if (ISCXFlowMeter.singlePcap(fullFile, PropertiesUtil.getPcapCsvPath())) {
+            log.info("grabPackets：数据包转换成功");
+        } else {
+            log.info("grabPackets：数据包转换失败");
+        }
         LabelUtil.singleCsvLabel(csvFullPath, "test"); //测试集打标签
         Packet packet = new Packet();
         packet.setPacketName(fileName);
@@ -114,8 +123,8 @@ public class GrabPacketsService {
         JSch jsch = new JSch();
         Session session = jsch.getSession(PropertiesUtil.getRemoteRootName(), PropertiesUtil.getremoteIP(), 22);
 
-//        ProxyHTTP proxyHTTP= new  ProxyHTTP(PropertiesUtil.getHttpProxy(),PropertiesUtil.getHttpProxyPort());
-//        session.setProxy(proxyHTTP);
+        ProxyHTTP proxyHTTP= new  ProxyHTTP(PropertiesUtil.getHttpProxy(),PropertiesUtil.getHttpProxyPort());
+        session.setProxy(proxyHTTP);
 
         session.setPassword(PropertiesUtil.getRemoteRootPassword()); // 设置密码
         session.setUserInfo(new MyUserInfo()); //需要实现Jsch包中的UserInfo,UIKeyboardInteractive接口，用以保存用户信息，以及进行键盘交互式认证并执行命令。

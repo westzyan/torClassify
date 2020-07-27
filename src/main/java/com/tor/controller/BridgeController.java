@@ -1,6 +1,7 @@
 package com.tor.controller;
 
 import com.tor.domain.Bridge;
+import com.tor.result.Const;
 import com.tor.result.Result;
 import com.tor.service.BridgeService;
 import lombok.extern.slf4j.Slf4j;
@@ -24,7 +25,7 @@ public class BridgeController {
         List<Bridge> bridgeList = bridgeService.selectBridges();
         modelMap.addAttribute("result", Result.success(bridgeList));
         modelMap.addAttribute("total", bridgeList.size());
-        return "bridge";
+        return Const.BRIDGE_PAGE;
     }
 
     @RequestMapping("/bridge_table")
@@ -32,5 +33,4 @@ public class BridgeController {
     public List<Bridge> bridgeCharts() {
         return bridgeService.selectBridges();
     }
-
 }

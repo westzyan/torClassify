@@ -22,7 +22,7 @@ public class QuickViewController {
     @RequestMapping("/quick_view")
     public String quickView(ModelMap modelMap) {
         List<Bridge> bridgeList = bridgeService.selectBridges();
-        return "quickView";
+        return "QuickView";
     }
 
 }

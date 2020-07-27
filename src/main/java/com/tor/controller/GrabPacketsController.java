@@ -28,11 +28,11 @@ public class GrabPacketsController {
 
     @RequestMapping(value = "/index")
     public String index(ModelMap modelMap) throws InterruptedException {
-        return "index";
+        return "Index";
     }
 
     @RequestMapping(value = "/grab_packets")
-    public String grabPacket(ModelMap modelMap, @RequestParam(value = "grabPlace", required = false, defaultValue = "server") String grabPlace,
+    public String grabPacket(ModelMap modelMap, @RequestParam(value = "grabPlace", required = false, defaultValue = "local") String grabPlace,
                              @RequestParam(value = "command", required = false, defaultValue = "ifconfig") String command,
                              @RequestParam(value = "packetCount", required = false, defaultValue = "5") int packetCount,
                              @RequestParam(value = "protocol", required = false, defaultValue = "ip") String protocol,
@@ -42,18 +42,18 @@ public class GrabPacketsController {
         Date date = new Date();
         SimpleDateFormat formatter = new SimpleDateFormat("yyyy-MM-dd+HH-mm-ss");
         String time = formatter.format(date);
-        String fileName = "ServerPcap_" + time + ".pcap";
-//        String  grabPlace = "server";
-//        String cmd;
-//        int packetCount;
-//        String protocol;
-//        int selectWay = 0;
+        String fileName = "";
+        if (grabPlace.equals("local")) {
+            fileName = "localPcap_" + time + ".pcap";
+        } else {
+            fileName = "ServerPcap_" + time + ".pcap";
+        }
         log.info("grab_packets:参数为：grabPlace：{}，command：{}，packetCount:{},protocol:{},selectWay:{}", grabPlace, command, packetCount, protocol, selectWay);
         grabPacketsService.grabPackets(fileName, grabPlace, command, packetCount, protocol, selectWay);
         response.setContentType("text/html;charset=utf-8");
         response.getWriter().write("<script>alert('正在抓包，抓包成功之后将存入数据库，数据包名称为：" + fileName + "！网页将跳转到抓包页面');  window.location='index';</script>");
         response.getWriter().flush();
-        return "index";
+        return "Index";
     }
 
 }

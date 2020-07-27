@@ -1,0 +1,13 @@
+**/.idea
+**/*.iml
+**/.idea/*
+
+**/target
+
+**/logs/
+
+**/.DS_Store
+
+**/*.properties
+
+*.mmdb

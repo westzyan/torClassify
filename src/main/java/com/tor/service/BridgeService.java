@@ -2,6 +2,7 @@ package com.tor.service;
 
 import com.tor.dao.BridgeDao;
 import com.tor.domain.Bridge;
+import com.tor.vo.CountryCnt;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -21,4 +22,7 @@ public class BridgeService {
         return bridgeDao.selectBridges();
     }
 
+    public List<CountryCnt> findByCountry() {
+        return bridgeDao.findByCountry();
+    }
 }

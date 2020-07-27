@@ -4,7 +4,7 @@ import com.tor.domain.ItemStyle;
 import com.tor.domain.Relay;
 import com.tor.domain.WorldView;
 import com.tor.service.RelayService;
-import com.tor.utils.RandomColorUtils;
+import com.tor.util.RandomColorUtils;
 import com.tor.vo.CountryCnt;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -24,7 +24,7 @@ import java.util.Locale;
 
 public class RelayController {
     @Autowired
-    private RelayService initService;
+    private RelayService relayService;
 
 
     @RequestMapping(value = "/worldView")
@@ -32,10 +32,7 @@ public class RelayController {
         ResourceBundleBasedAdapter resourceBundleBasedAdapter = ((ResourceBundleBasedAdapter) LocaleProviderAdapter.forJRE());
         OpenListResourceBundle resource = resourceBundleBasedAdapter.getLocaleData().getLocaleNames(Locale.UK);
 
-        List<Relay> allList = initService.findAll();
-        List<Relay> top = initService.findTop10();
-        List<CountryCnt> countryCntList = initService.findByCountry();
-
+        List<CountryCnt> countryCntList = relayService.findByCountry();
         List<WorldView> worldViewArrayList = new ArrayList<>();
         for (CountryCnt c : countryCntList) {
             String country = c.getCountryCode();
@@ -48,18 +45,30 @@ public class RelayController {
             worldView.setName(country);
             worldView.setValue(c.getCnt());
 
-            String color = new RandomColorUtils().generateColor();
             ItemStyle i = new ItemStyle();
-            i.setColor(color);
+            i.setColor(RandomColorUtils.generateColor());
 
             worldView.setItemStyle(i);
             worldViewArrayList.add(worldView);
         }
-
-        modelMap.addAttribute("allList", allList);
         modelMap.addAttribute("worldView", worldViewArrayList);
-        modelMap.addAttribute("top", top);
+        return "Worldview";
+//        return Const.WORLDVIEW_PAGE;
+    }
 
-        return "worldview";
+    @RequestMapping(value = "/top")
+    public String showTop(ModelMap modelMap) {
+        ResourceBundleBasedAdapter resourceBundleBasedAdapter = ((ResourceBundleBasedAdapter) LocaleProviderAdapter.forJRE());
+        OpenListResourceBundle resource = resourceBundleBasedAdapter.getLocaleData().getLocaleNames(Locale.UK);
+        List<Relay> top = relayService.findTop10();
+        for (Relay r : top) {
+            try {
+                r.setCountryCode(resource.getString(r.getCountryCode()));
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
+        }
+        modelMap.addAttribute("Top", top);
+        return "Top1";
     }
 }

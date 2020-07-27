@@ -1,6 +1,6 @@
 package com.tor.algorithm;
 
-import com.tor.utils.ArffUtil;
+import com.tor.util.ArffUtil;
 import weka.attributeSelection.AttributeSelection;
 import weka.attributeSelection.InfoGainAttributeEval;
 import weka.attributeSelection.Ranker;

@@ -1,6 +1,7 @@
 package com.tor.dao;
 
 import com.tor.domain.Bridge;
+import com.tor.vo.CountryCnt;
 import org.apache.ibatis.annotations.*;
 import org.springframework.stereotype.Repository;
 
@@ -25,4 +26,6 @@ public interface BridgeDao {
     })
     List<Bridge> selectBridges();
 
+    @Select("select count(*) as cnt,country_code as countryCode from bridge GROUP BY country_code")
+    List<CountryCnt> findByCountry();
 }
